@@ -10,7 +10,7 @@
 
 ## About The Project
 
-web app built with laravel to schedule social media posts to later publish .. project focuses on using laravel framework components , architecture concepts , patterns and tests.
+web app built with laravel to schedule social media posts for later publish .. project focuses on using laravel framework components , architecture concepts , patterns and tests.
 ** demo project not ready to be used **
 
 ### Screenshots
