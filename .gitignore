@@ -1,0 +1,16 @@
+/node_modules
+/public/hot
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/app/PostaBot/TokenizerProviders/Instagram.php
+/app/PostaBot/TokenizerProviders/Twitter.php
+package-lock.json
+composer.lock
