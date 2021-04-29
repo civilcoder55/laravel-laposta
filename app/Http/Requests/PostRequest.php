@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Rules\PostAccountsCheck;
 use App\Rules\PostMediaCheck;
-use DateTime;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePostRequest extends FormRequest
@@ -37,13 +36,12 @@ class StorePostRequest extends FormRequest
         ];
     }
 
-
     public function withValidator($validator)
     {
         if (!$validator->fails()) {
             $validator->after(function ($validator) {
                 if ($this->schedule_date) {
-                    $this->merge(['schedule_date' => DateTime::createFromFormat('m/d/Y g:i A', $this->schedule_date)->format('Y-m-d H:i:s')]);
+                    $this->merge(['schedule_date' => \DateTime::createFromFormat('m/d/Y g:i A', $this->schedule_date)->format('Y-m-d H:i:s')]);
                 }
 
                 if (!$this->media) {

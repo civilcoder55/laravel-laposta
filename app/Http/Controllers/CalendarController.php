@@ -12,7 +12,7 @@ class CalendarController extends Controller
 
     public function index()
     {
-        $posts = auth()->user()->posts()->where(['is_draft' => 0 , 'success'=>null])->get();
+        $posts = auth()->user()->getScheduledPosts();
         return view('calendar', compact('posts'));
     }
 

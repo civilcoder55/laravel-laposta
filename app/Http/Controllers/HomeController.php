@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -15,7 +16,6 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index()
     {
         //get posts statistics count with one query
@@ -24,10 +24,10 @@ class HomeController extends Controller
                 DB::raw('COUNT(*) as total'),
                 DB::raw("SUM(CASE WHEN is_draft = 0 && success IS NULL THEN 1 ELSE 0 END) AS scheduled"),
                 DB::raw("SUM(CASE WHEN is_draft = 0 && success = 1 THEN 1 ELSE 0 END) AS success"),
-                DB::raw("SUM(CASE WHEN is_draft = 0 && success = 0 THEN 1 ELSE 0 END) AS failed")
+                DB::raw("SUM(CASE WHEN is_draft = 0 && success = 0 THEN 1 ELSE 0 END) AS failed"),
             )
         )->first();
-        $accounts = auth()->user()->accounts()->whereNotNull('parent_id')->count();
+        $accounts = auth()->user()->accounts()->count();
         return view('home', compact(['accounts', 'statistics']));
     }
 }

@@ -15,13 +15,8 @@ class Media extends Model
     protected static function booted()
     {
         static::deleting(function ($media) {
-            try {
-                Storage::disk('local')->delete("media/{$media->user_id}/original/{$media->name}");
-                Storage::disk('local')->delete("media/{$media->user_id}/thumb/{$media->name}");
-            } catch (\Throwable $th) {
-
-            }
-
+            Storage::disk('local')->delete("media/{$media->user_id}/original/{$media->name}");
+            Storage::disk('local')->delete("media/{$media->user_id}/thumb/{$media->name}");
         });
     }
 

@@ -33,7 +33,6 @@ class PostaBotServiceProvider extends ServiceProvider
             return new PublisherManager($app);
         });
 
-
     }
 
     /**

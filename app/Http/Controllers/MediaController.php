@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MediaRequest;
 use App\Models\Media;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 class MediaController extends Controller
@@ -15,29 +17,20 @@ class MediaController extends Controller
         $this->middleware('auth');
     }
 
-
     public function index()
     {
         $user_media = auth()->user()->media()->get(['id', 'name']);
         return view('media', compact('user_media'));
     }
 
-
-    public function store(Request $request)
+    public function store(MediaRequest $request)
     {
-
-
-        $data = request()->validate([
-            'media' => ['required', 'image', 'mimes:jpeg,png,jpg'],
-        ]);
         $userId = auth()->user()->id;
-        // create hash from path and original name as media name ...  file hash as unique name
-        $mediaName = md5_file($data['media']->getRealPath()) . "." . $data['media']->getClientOriginalExtension();
+        $mediaName = md5(Str::random(40) . microtime()) . "." . $request->media->getClientOriginalExtension();
         $mediaPath = request('media')->storeAs("media/{$userId}/original", $mediaName); // save file
         $thumbPath = request('media')->storeAs("media/{$userId}/thumb", $mediaName); // save thumbnail
 
-        $thumb = Image::make(storage_path("app/{$thumbPath}"))->fit(120, 120); // resize image thumbnail
-        $thumb->save();
+        Image::make(storage_path("app/{$thumbPath}"))->fit(120, 120)->save(); // resize image thumbnail
 
         $media = auth()->user()->media()->create([
             'name' => $mediaName,
@@ -45,9 +38,8 @@ class MediaController extends Controller
             'thumb_path' => $thumbPath,
         ]);
 
-        return response()->json(['success' => true, 'name' => $mediaName, 'id' => $media->id, 'name' => $media->name]);
+        return response()->json(['success' => true, 'name' => $mediaName, 'id' => $media->id]);
     }
-
 
     public function showOriginal($mediaName)
     {
@@ -66,7 +58,6 @@ class MediaController extends Controller
         }
         abort('404');
     }
-
 
     public function destroy(Media $media)
     {

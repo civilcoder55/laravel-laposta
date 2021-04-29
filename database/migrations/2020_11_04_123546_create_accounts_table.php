@@ -16,7 +16,6 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->unsignedInteger('parent_id')->nullable();
             $table->enum('platform', array('facebook', 'twitter', 'instagram'));
             $table->string('uid')->unique();
             $table->string('name');

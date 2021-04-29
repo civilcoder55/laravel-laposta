@@ -15,7 +15,7 @@ class Facebook implements TokenizerContract
     {
         $this->client_id = config('services.facebook.client_id');
         $this->client_secret = config('services.facebook.client_secret');
-        $this->redirect_uri = route('account.redirection.handler', 'facebook');
+        $this->redirect_uri = route('accounts.connect.callback', 'facebook');
     }
 
     /**
@@ -29,17 +29,17 @@ class Facebook implements TokenizerContract
     public function getAndSaveData()
     {
         $this->access_token = $this->handleCallback();
-        $account_info = $this->getAccountInfo();
-        $account = auth()->user()->accounts()->updateOrCreate(
-            ['platform' => 'facebook', 'uid' => $account_info['uid']],
-            ['name' => $account_info['name'], 'type' => $account_info['type'], 'token' => $account_info['token'], 'secret' => $account_info['secret']]
-        );
+        //$account_info = $this->getAccountInfo();
+        // $account = auth()->user()->accounts()->updateOrCreate(
+        //     ['platform' => 'facebook', 'uid' => $account_info['uid']],
+        //     ['name' => $account_info['name'], 'type' => $account_info['type'], 'token' => $account_info['token'], 'secret' => $account_info['secret']]
+        // );
 
         $account_pages = $this->getAccountPages();
         foreach ($account_pages as $page) {
             auth()->user()->accounts()->updateOrCreate(
                 ['platform' => 'facebook', 'uid' => $page['uid']],
-                ['parent_id' => $account->id, 'name' => $account->name . ' (' . $page['name'] . ')', 'type' => 'Page', 'token' => $page['token'], 'secret' => $page['secret']]
+                ['name' => $page['name'], 'type' => 'Page', 'token' => $page['token'], 'secret' => $page['secret']]
             );
         }
 
@@ -47,7 +47,7 @@ class Facebook implements TokenizerContract
         foreach ($account_groups as $group) {
             auth()->user()->accounts()->updateOrCreate(
                 ['platform' => 'facebook', 'uid' => $group['uid']],
-                ['parent_id' => $account->id, 'name' => $account->name . ' (' . $group['name'] . ')', 'type' => 'Group', 'token' => $group['token'], 'secret' => $group['secret']]
+                ['name' => $group['name'], 'type' => 'Group', 'token' => $group['token'], 'secret' => $group['secret']]
             );
         }
     }

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Rules\CheckOldPass;
+use App\Http\Requests\ProfileInfoRequest;
+use App\Http\Requests\ProfilePassworfRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -30,40 +31,24 @@ class ProfileController extends Controller
         return view('profile', compact('other_sessions', 'current_session'));
     }
 
-    public function update(Request $request)
+    public function update(ProfileInfoRequest $request)
     {
-        $data = request()->validate([
-            'email' => ['unique:users,email,' . auth()->user()->id, 'required', 'email'],
-            'name' => ['required', 'string'],
-            'avatar' => ['image'],
-        ]);
 
         if (request('avatar')) {
             $oldImagePath = auth()->user()->profile->image;
-            try {
-                Storage::disk('local')->delete("public/{$oldImagePath}");
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
-
-            $imagePath = request('avatar')->store('profile', 'public');
-            $image = Image::make(public_path("storage/{$imagePath}"))->fit(128, 128);
-            $image->save();
+            Storage::disk('local')->delete("public/{$oldImagePath}");
+            $imagePath = $request->avatar->store('profile', 'public');
+            Image::make(public_path("storage/{$imagePath}"))->fit(128, 128)->save();
             auth()->user()->profile->update(['image' => $imagePath]);
-
         }
 
-        auth()->user()->update($data);
+        auth()->user()->update($request->validated());
         return redirect("/profile")->with('status', 'Your information updated successfully');
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(ProfilePassworfRequest $request)
     {
-        $data = request()->validate([
-            'oldPassword' => ['required', new CheckOldPass],
-            'password' => ['required', 'min:6', 'confirmed'],
-        ]);
-        auth()->user()->update(['password' => Hash::make($data['password'])]);
+        auth()->user()->update(['password' => Hash::make($request->password)]);
         return redirect("/profile")->with('status', 'Your password updated successfully');
     }
 
@@ -71,7 +56,6 @@ class ProfileController extends Controller
     {
         $session = auth()->user()->session()->where(['pub_id' => $id])->first();
         if ($session) {
-
             $this->authorize('delete', $session);
             Session::getHandler()->destroy($session->id);
             return redirect("/profile")->with('status', 'Session destroyed successfully');

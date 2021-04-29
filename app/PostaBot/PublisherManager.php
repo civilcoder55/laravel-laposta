@@ -5,7 +5,6 @@ namespace App\PostaBot;
 use Exception;
 use Illuminate\Support\Manager;
 
-
 class PublisherManager extends Manager
 {
 
@@ -13,7 +12,6 @@ class PublisherManager extends Manager
     {
         throw new Exception('invalid driver');
     }
-
 
     public function createFacebookDriver()
     {

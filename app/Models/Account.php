@@ -19,11 +19,6 @@ class Account extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function subAccounts()
-    {
-        return $this->hasMany(Account::class, 'parent_id');
-    }
-
     public function posts()
     {
         return $this->belongsToMany(Post::class);

@@ -31,11 +31,11 @@
                                 <div style="margin-left: auto">
 
                                     <label for="file" class="btn btn-sm" style="background-color: #3b5998;color:white"
-                                        onclick="location.href = '{{ route('account.add', 'facebook') }}';"> <i
+                                        onclick="location.href = '{{ route('accounts.connect', 'facebook') }}';"> <i
                                             class="nav-icon fab fa-facebook-f pr-1"></i>
                                         Add Facebook Account </label>
                                     <label for="file" class="btn btn-sm"
-                                        onclick="location.href = '{{ route('account.add', 'instagram') }}';"
+                                        onclick="location.href = '{{ route('accounts.connect', 'instagram') }}';"
                                         style="background: #f09433; 
                                                                                                                                                                                                                                                                                                     background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
                                                                                                                                                                                                                                                                                                     background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
@@ -44,7 +44,7 @@
                                         <i class="nav-icon fab fa-instagram pr-1"></i>
                                         Add instagram Account </label>
                                     <label for="file" class="btn btn-sm" style="background-color: #00acee;color:white"
-                                        onclick="location.href = '{{ route('account.add', 'twitter') }}';"> <i
+                                        onclick="location.href = '{{ route('accounts.connect', 'twitter') }}';"> <i
                                             class="nav-icon fab fa-twitter pr-1"></i>
                                         Add Twitter Account </label>
 
@@ -74,7 +74,7 @@
                                                 <td>{{ $account->created_at->diffForHumans() }}</td>
                                                 <td>
                                                     <form
-                                                        action="{{ route('account.destroy', [$account->platform, $account->id]) }}"
+                                                        action="{{ route('accounts.destroy', [$account->platform, $account->id]) }}"
                                                         method="post">
                                                         @csrf
                                                         <input type="hidden" name="_method" value="DELETE">
@@ -84,17 +84,6 @@
                                                     </form>
                                                 </td>
                                             </tr>
-
-                                            @foreach ($account->subAccounts as $account)
-                                                <tr>
-                                                    <td>{{ $account->uid }}</td>
-                                                    <td>{{ $account->name }}</td>
-                                                    <td>{{ $account->platform }}</td>
-                                                    <td>{{ $account->type }}</td>
-                                                    <td>{{ $account->created_at->diffForHumans() }}</td>
-                                                    <td></td>
-                                                </tr>
-                                            @endforeach
                                         @endforeach
 
                                     </tbody>
