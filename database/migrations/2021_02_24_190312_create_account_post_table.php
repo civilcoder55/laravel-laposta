@@ -14,9 +14,12 @@ class CreateAccountPostTable extends Migration
     public function up()
     {
         Schema::create('account_post', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('account_id')->unsigned();
-            $table->integer('post_id')->unsigned();
+            $table->id();
+            $table->bigInteger('post_id')->unsigned();
+            $table->bigInteger('account_id')->unsigned();
+
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
         });
     }
 

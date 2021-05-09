@@ -10,23 +10,11 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = ['name', 'email', 'password', 'avatar'];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = ['email_verified_at' => 'datetime'];
-
-    protected static function booted()
-    {
-        static::created(function ($user) {
-            $user->profile()->create();
-        });
-    }
-
-    public function profile()
-    {
-        return $this->hasOne(Profile::class);
-    }
 
     public function media()
     {
@@ -53,19 +41,13 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
     public function receivesBroadcastNotificationsOn()
     {
         return 'users.' . $this->id;
     }
-
-    public function getAccounts()
-    {
-        return $this->accounts()->orderBy('created_at', 'desc')->paginate(15);
-    }
-
-    public function getScheduledPosts()
-    {
-        return $this->posts()->where(['is_draft' => 0 , 'success'=>null])->get();
-    }
-
 }

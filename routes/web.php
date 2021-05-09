@@ -4,27 +4,27 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
-Route::get('/login/{driver}', 'SocialAuthController@redirectToDrive')->name('login.social');
-Route::get('/login/{driver}/redirect', 'SocialAuthController@redirectionHandler');
+Route::get('/login/{provider}/connect', 'SocialAuthController@connect')->where(['provider' => '(facebook|google)'])->name('connect.social');
+Route::get('/login/{provider}/redirect', 'SocialAuthController@callback');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/revoke/facebook', 'SocialAuthController@revokeFacebook')->name('revoke.facebook');
-    Route::get('/revoke/google', 'SocialAuthController@revokeGoogle')->name('revoke.google');
-    Route::get('{path}', 'HomeController@index')->where('path', '(home|)')->name('home');
-    Route::get('/calendar', 'CalendarController@index')->name('calendar.index');
+    Route::redirect('/', '/dashboard');
+    Route::get('/disconnect/facebook', 'SocialAuthController@disconnectFacebook')->name('disconnect.facebook');
+    Route::get('/disconnect/google', 'SocialAuthController@disconnectGoogle')->name('disconnect.google');
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('/calendar', 'DashboardController@calendar')->name('calendar');
 
     Route::prefix('notifications')->group(function () {
         Route::get('/', 'NotificationController@index')->name('notifications.index');
         Route::delete('delete/all', 'NotificationController@destroyAll')->name('notifications.destroy.all');
-        Route::delete('delete/{id}', 'NotificationController@destroy')->name('notifications.destroy');
-
+        Route::delete('delete/{notification}', 'NotificationController@destroy')->name('notifications.destroy');
     });
 
     Route::prefix('profile')->group(function () {
         Route::get('/', 'ProfileController@index')->name('profile.index');
         Route::post('/', 'ProfileController@update')->name('profile.update');
         Route::post('password', 'ProfileController@updatePassword')->name('profile.update.password');
-        Route::get('session/destroy/{id}', 'ProfileController@destroy')->name('profile.session.destroy');
+        Route::get('session/destroy/{id}', 'ProfileController@destroySession')->name('profile.session.destroy');
     });
 
     Route::prefix('media')->group(function () {
@@ -32,14 +32,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/', 'MediaController@store')->name('media.store');
         Route::get('original/{mediaName}', 'MediaController@showOriginal')->name('media.show.original');
         Route::get('thumb/{mediaName}', 'MediaController@showThumb')->name('media.show.thumb');
-        Route::post('delete/{media}', 'MediaController@destroy')->name('media.destroy');
+        Route::delete('delete/{media}', 'MediaController@destroy')->name('media.destroy');
     });
 
     Route::prefix('accounts')->where(['platform' => '(facebook)'])->group(function () { //will add |twitter|instagram later ...
         Route::get('/', 'AccountController@index')->name('accounts.index');
-        Route::get('{platform}/connect', 'AccountController@redirectToPlatform')->name('accounts.connect');
-        Route::get('{platform}/callback', 'AccountController@redirectionHandler')->name('accounts.connect.callback');
-        Route::delete('{platform}/delete/{account}', 'AccountController@destroy')->name('accounts.destroy');
+        Route::get('{platform}/connect', 'AccountController@connect')->name('accounts.connect');
+        Route::get('{platform}/callback', 'AccountController@callback')->name('accounts.connect.callback');
+        Route::delete('delete/{account}', 'AccountController@destroy')->name('accounts.destroy');
     });
 
     Route::prefix('posts')->group(function () {

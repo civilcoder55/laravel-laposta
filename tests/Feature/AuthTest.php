@@ -13,7 +13,6 @@ class AuthTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
-
     /** @test */
     public function guest_can_view_register_page()
     {
@@ -30,16 +29,15 @@ class AuthTest extends TestCase
     public function user_cant_view_register_page()
     {
         $user = User::factory()->make();
-        $this->actingAs($user)->get('/register')->assertRedirect('/home');
+        $this->actingAs($user)->get('/register')->assertRedirect('/dashboard');
     }
 
     /** @test */
     public function user_cant_view_login_page()
     {
         $user = User::factory()->make();
-        $this->actingAs($user)->get('/login')->assertRedirect('/home');
+        $this->actingAs($user)->get('/login')->assertRedirect('/dashboard');
     }
-
 
     /** @test */
     public function user_can_register()
@@ -48,8 +46,8 @@ class AuthTest extends TestCase
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'password' => 'password',
-            'password_confirmation' => 'password'
-        ])->assertRedirect('/home');
+            'password_confirmation' => 'password',
+        ])->assertRedirect('/dashboard');
         $this->assertDatabaseCount('users', 1);
     }
 
@@ -61,11 +59,10 @@ class AuthTest extends TestCase
             'name' => $this->faker->name,
             'email' => $user->email,
             'password' => 'password',
-            'password_confirmation' => 'password'
+            'password_confirmation' => 'password',
         ])->assertRedirect('/register')->assertSessionHasErrors(['email']);
         $this->assertGuest()->assertDatabaseCount('users', 1);
     }
-
 
     /** @test */
     public function valid_user_can_login()
@@ -75,10 +72,9 @@ class AuthTest extends TestCase
         $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
-        ])->assertRedirect('/home');
+        ])->assertRedirect('/dashboard');
         $this->assertAuthenticatedAs($user);
     }
-
 
     /** @test */
     public function invalid_user_cant_login()
@@ -89,6 +85,5 @@ class AuthTest extends TestCase
         ])->assertRedirect('/login')->assertSessionHasErrors(['email']);
         $this->assertGuest();
     }
-
 
 }

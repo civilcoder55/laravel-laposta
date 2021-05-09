@@ -2,8 +2,7 @@
 
 namespace App\Listeners;
 
-
-use App\Notifications\LoginNotify;
+use App\Notifications\LoginNotification;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
@@ -16,7 +15,6 @@ class SuccessfulLoginListener
         $this->request = $request;
     }
 
-
     public function handle(Login $event)
     {
         //if new registered user , don't send notification
@@ -27,7 +25,7 @@ class SuccessfulLoginListener
         $agent = get_browser($this->request->server('HTTP_USER_AGENT'), true);
         $from = $agent['browser'];
         $on = $agent['platform'];
-        $event->user->notify(new LoginNotify($from, $on)); // fire LoginNotify which store notification in database and brodcast it
+        $event->user->notify(new LoginNotification($from, $on)); // fire LoginNotification which store notification in database and brodcast it
 
     }
 }

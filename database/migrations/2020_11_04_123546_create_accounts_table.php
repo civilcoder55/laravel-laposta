@@ -17,13 +17,12 @@ class CreateAccountsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('platform', array('facebook', 'twitter', 'instagram'));
-            $table->string('uid')->unique();
+            $table->string('uid');
             $table->string('name');
             $table->string('type');
             $table->string('token');
             $table->string('secret')->nullable();
             $table->timestamps();
-            $table->index('user_id');
         });
     }
 

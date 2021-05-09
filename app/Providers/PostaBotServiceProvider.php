@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use App\Exceptions\BadAccountException;
+use App\PostaBot\Contracts\Tokenizable;
 use App\PostaBot\PublisherManager;
-use App\PostaBot\TokenizerContract;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,15 +16,10 @@ class PostaBotServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(TokenizerContract::class, function ($app) {
+        $this->app->singleton(Tokenizable::class, function ($app) {
             $platforms = ['facebook' => 'App\PostaBot\TokenizerProviders\Facebook', 'twitter' => 'App\PostaBot\TokenizerProviders\Twitter', 'instagram' => 'App\PostaBot\TokenizerProviders\Instagram'];
             $platform = Route::current()->parameter('platform');
-
-            if (array_key_exists($platform, $platforms)) {
-                return new $platforms[$platform];
-            }
-
-            throw new BadAccountException();
+            return new $platforms[$platform];
 
         });
 
@@ -33,15 +27,5 @@ class PostaBotServiceProvider extends ServiceProvider
             return new PublisherManager($app);
         });
 
-    }
-
-    /**
-     * Bootstrap services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
     }
 }

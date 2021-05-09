@@ -4,41 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MediaRequest;
 use App\Models\Media;
-use Illuminate\Http\Request;
+use App\Repositories\Facades\UserRepository;
+use App\Services\Facades\MediaService;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
 
 class MediaController extends Controller
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        $user_media = auth()->user()->media()->get(['id', 'name']);
-        return view('media', compact('user_media'));
+        $userMedia = UserRepository::getMedia();
+        return view('main.media', compact('userMedia'));
     }
 
     public function store(MediaRequest $request)
     {
-        $userId = auth()->user()->id;
-        $mediaName = md5(Str::random(40) . microtime()) . "." . $request->media->getClientOriginalExtension();
-        $mediaPath = request('media')->storeAs("media/{$userId}/original", $mediaName); // save file
-        $thumbPath = request('media')->storeAs("media/{$userId}/thumb", $mediaName); // save thumbnail
-
-        Image::make(storage_path("app/{$thumbPath}"))->fit(120, 120)->save(); // resize image thumbnail
-
-        $media = auth()->user()->media()->create([
-            'name' => $mediaName,
-            'original_path' => $mediaPath,
-            'thumb_path' => $thumbPath,
-        ]);
-
-        return response()->json(['success' => true, 'name' => $mediaName, 'id' => $media->id]);
+        $media = MediaService::store($request);
+        return response()->json(['success' => true, 'name' => $media->name, 'id' => $media->id]);
     }
 
     public function showOriginal($mediaName)
@@ -62,7 +44,7 @@ class MediaController extends Controller
     public function destroy(Media $media)
     {
         $this->authorize('delete', $media);
-        $media->delete();
-        return response()->json(['success' => true]);
+        $res = MediaService::destroy($media);
+        return response()->json($res);
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\PostaBot\TokenizerProviders;
 
-use App\PostaBot\TokenizerContract;
-use Exception;
+use App\PostaBot\Contracts\Tokenizable;
+use App\PostaBot\TokenizerException;
 use Illuminate\Support\Facades\Http;
 
-class Facebook implements TokenizerContract
+class Facebook implements Tokenizable
 {
     /**
      * get facebook app required configurations from laravel configs
@@ -60,7 +60,7 @@ class Facebook implements TokenizerContract
         $code = request()->code;
 
         if (empty($code)) {
-            throw new Exception();
+            throw new TokenizerException("Malformed Request , Please try again .. ");
         }
 
         // Get access token
@@ -71,8 +71,9 @@ class Facebook implements TokenizerContract
             'grant_type' => 'authorization_code',
             'code' => $code,
         ]);
+
         if (!$response->successful()) {
-            throw new Exception();
+            throw new TokenizerException(($e = $response->json()['error']['message']) ? $e : "Error , Please try again .. ");
         }
 
         $access_token = $response->json()['access_token'];
@@ -87,7 +88,7 @@ class Facebook implements TokenizerContract
         $access_token = $this->access_token;
         $response = Http::get("https://graph.facebook.com/me?fields=id,first_name,last_name&access_token={$access_token}");
         if (!$response->successful()) {
-            throw new Exception();
+            throw new TokenizerException("Malformed Request , Please try again .. ");
         }
 
         $account = $response->json();
@@ -109,11 +110,10 @@ class Facebook implements TokenizerContract
         //get facebook pages info
         $response = Http::get("https://graph.facebook.com/me/accounts?access_token={$access_token}");
         if (!$response->successful()) {
-            throw new Exception();
+            throw new TokenizerException($response->json()['error']['message'] || "Error , Please try again .. ");
         }
         $pages = $response->json()['data'];
         foreach ($pages as $page) {
-            //get every page access token
             $token = $this->getPageAccessToken($page['id']);
             array_push($pages_data, ['platform' => 'facebook', 'uid' => $page['id'], 'name' => $page['name'], 'token' => $token, 'secret' => null]);
         }
@@ -125,7 +125,7 @@ class Facebook implements TokenizerContract
         $access_token = $this->access_token;
         $response = Http::get("https://graph.facebook.com/$uid?fields=access_token&access_token=$access_token");
         if (!$response->successful()) {
-            throw new Exception();
+            throw new TokenizerException($response->json()['error']['message'] || "Error , Please try again .. ");
         }
         return $response->json()['access_token'];
     }
@@ -141,7 +141,7 @@ class Facebook implements TokenizerContract
         //get facebook groups info
         $response = Http::get("https://graph.facebook.com/me/groups?access_token={$access_token}");
         if (!$response->successful()) {
-            throw new Exception();
+            throw new TokenizerException($response->json()['error']['message'] || "Error , Please try again .. ");
         }
 
         $groups = $response->json()['data'];

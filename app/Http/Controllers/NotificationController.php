@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
+use App\Repositories\Facades\UserRepository;
+use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller
 {
 
     public function index()
     {
-        $notifications = auth()->user()->notifications()->orderBy('created_at', 'desc')->paginate(15);
-        return view('notifications', compact('notifications'));
+        $allNotifications = UserRepository::getNotifications();
+        return view('main.notifications', compact('allNotifications'));
     }
 
-
-    public function destroy($id)
+    public function destroy(Notification $notification)
     {
-        $notification = auth()->user()->notifications()->where(['id' => $id])->first();
-        if ($notification) {
-            $notification->delete();
-            return redirect(route('notifications.index'))->with('status', "Notification deleted successfully");
-        }
-        return redirect(route('notifications.index'));
+        $this->authorize('delete', $notification);
+        $notification->delete();
+        Cache::forget('notifications.' . auth()->user()->id);
+        return redirect()->route('notifications.index')->with('status', "Notification deleted successfully");
     }
 
     public function destroyAll()
     {
         auth()->user()->notifications()->delete();
-        return redirect(route('notifications.index'))->with('status', "All notifications deleted successfully");
+        Cache::forget('notifications.' . auth()->user()->id);
+        return redirect()->route('notifications.index')->with('status', "All notifications deleted successfully");
     }
 }

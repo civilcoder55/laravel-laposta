@@ -3,12 +3,10 @@
 namespace App\PostaBot\PublisherProviders;
 
 use Exception;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 
 class Facebook
 {
-
     public function publishPost($post, $account)
     {
         $uid = $account->uid;
@@ -29,15 +27,25 @@ class Facebook
         }
 
         if (!$response->successful()) {
+            $log = [[
+                'status' => 'danger',
+                'message' => ($e = $response->json()['error']['message']) ? $e : "error happened while publishing the post with $account->name $account->type",
+            ]];
+            $post->update(['status' => 'failed', 'logs' => $log]);
             throw new Exception();
         }
+
+        $log = [[
+            'status' => 'success',
+            'message' => "Post published successfully at $post->schedule_date to $account->name $account->type",
+        ]];
+        $post->update(['status' => 'success', 'logs' => $log]);
 
     }
 
     private function uploadSinglePhoto($uid, $token, $photo)
     {
         $response = Http::attach('attachment', file_get_contents(storage_path("app/{$photo}")), 'photo.jpg')->post("https://graph.facebook.com/$uid/photos", ['access_token' => $token, 'published' => false]);
-        Log::info(json_encode($response->json(), JSON_PRETTY_PRINT));
         return $response->json()['id'];
     }
 

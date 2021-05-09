@@ -11,9 +11,8 @@ class Post extends Model
 
     protected $guarded = [];
     protected $casts = [
-        'data' => 'object',
+        'logs' => 'array',
     ];
-
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -27,5 +26,25 @@ class Post extends Model
     public function media()
     {
         return $this->belongsToMany(Media::class);
+    }
+    public function getAccountsIdsAttribute()
+    {
+        return array_map(function ($item) {
+            return $item['id'];
+        }, $this->accounts->toArray());
+    }
+
+    public function getMediaIdsAttribute()
+    {
+        return array_map(function ($item) {
+            return $item['id'];
+        }, $this->media->toArray());
+    }
+
+    public function setLogsAttribute($value)
+    {
+        $old = isset($this->attributes['logs']) ? json_decode($this->attributes['logs']) : [];
+        $new = array_merge($value,$old);
+        $this->attributes['logs'] = json_encode($new);
     }
 }

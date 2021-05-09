@@ -20,7 +20,6 @@ class CreateSocialAuthUsersTable extends Migration
             $table->string('uid')->unique();
             $table->string('token');
             $table->timestamps();
-            $table->index('user_id');
         });
     }
 

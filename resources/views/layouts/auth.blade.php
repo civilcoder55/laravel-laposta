@@ -23,7 +23,7 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="{{ route('home', '/') }}"><b>LA</b>POSTA</a>
+            <a href="{{ route('dashboard') }}"><b>LA</b>POSTA</a>
         </div>
         <!-- /.login-logo -->
         @yield('content')

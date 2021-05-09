@@ -3,51 +3,42 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
-use App\PostaBot\TokenizerContract;
-use Exception;
+use App\PostaBot\Contracts\Tokenizable;
+use App\Repositories\Facades\UserRepository;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
-    //
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
-        $accounts = auth()->user()->getAccounts();
-        return view('account', compact('accounts'));
+        $accounts = UserRepository::getAccounts();
+        return view('main.accounts', compact('accounts'));
     }
 
-    // redirect user to platform to approve ...
-    public function connect(TokenizerContract $Tokenizer)
+    // redirect user to platform to add social media account ...
+    public function connect(Tokenizable $Tokenizer)
     {
         return $Tokenizer->redirect();
     }
 
-    // handling redirection form plaform and add account to database
-    public function callback($platform, TokenizerContract $Tokenizer)
+    // handling redirection callback form plaform and add account to database
+    public function callback($platform, Tokenizable $Tokenizer)
     {
-        try {
-            $Tokenizer->getAndSaveData();
-            return redirect(route('accounts.index'))->with('status', "{$platform} account added successfuly");
-        } catch (Exception $e) {
-            return redirect(route('accounts.index'))->with('error', "Faild to add {$platform} account");
-        }
-
+        $Tokenizer->getAndSaveData();
+        return redirect()->route('accounts.index')->with('status', "{$platform} account added successfully");
     }
 
-    // revoke access token and delete account form database ....
-    public function destroy($platform, Account $account)
+    public function destroy(Account $account)
     {
         $this->authorize('delete', $account);
-        //revoke access token
-        // $Tokenizer->revoke($account->token);
-
-        $account->delete();
-
-        return redirect(route('accounts.index'))->with('status', "{$platform} account deleted successfully");
+        $exist = DB::table('account_post')->where(['account_id' => $account->id])->first(['id']);
+        if ($exist) {
+            session()->flash('error', "{$account->platform} account linked to some posts please delete posts first");
+        } else {
+            $account->delete();
+            session()->flash('status', "{$account->platform} account deleted successfully");
+        }
+        return redirect()->route('accounts.index');
     }
 
 }

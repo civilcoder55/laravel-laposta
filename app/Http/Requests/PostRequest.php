@@ -6,8 +6,9 @@ use App\Rules\PostAccountsCheck;
 use App\Rules\PostMediaCheck;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostRequest extends FormRequest
+class PostRequest extends FormRequest
 {
+    protected $stopOnFirstFailure = true;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -55,5 +56,15 @@ class StorePostRequest extends FormRequest
             });
         }
 
+    }
+
+    public function messages()
+    {
+        return [
+            'accounts.required_if' => 'Please select some accounts before schedule',
+            'message.required_if' => 'Please add text message before schedule',
+            'schedule_date.required_if' => 'Please select schedule date and time',
+
+        ];
     }
 }

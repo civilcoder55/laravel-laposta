@@ -14,9 +14,14 @@ class CreateMediaPostTable extends Migration
     public function up()
     {
         Schema::create('media_post', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('media_id')->unsigned();
-            $table->integer('post_id')->unsigned();
+            $table->id();
+
+            $table->bigInteger('post_id')->unsigned();
+            $table->bigInteger('media_id')->unsigned();
+
+            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreign('media_id')->references('id')->on('media')->onDelete('cascade');
+
         });
     }
 

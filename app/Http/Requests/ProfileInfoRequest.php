@@ -13,7 +13,7 @@ class ProfileInfoRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,7 +26,7 @@ class ProfileInfoRequest extends FormRequest
         return [
             'email' => ['unique:users,email,' . auth()->user()->id, 'required', 'email'],
             'name' => ['required', 'string'],
-            'avatar' => ['image'],
+            '_avatar' => ['image'],
         ];
     }
 }

@@ -20,7 +20,6 @@ class CreateMediaTable extends Migration
             $table->string('original_path');
             $table->string('thumb_path');
             $table->timestamps();
-            $table->index('user_id');
         });
     }
 

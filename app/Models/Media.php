@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -15,8 +15,9 @@ class Media extends Model
     protected static function booted()
     {
         static::deleting(function ($media) {
-            Storage::disk('local')->delete("media/{$media->user_id}/original/{$media->name}");
-            Storage::disk('local')->delete("media/{$media->user_id}/thumb/{$media->name}");
+            $mediaService = new MediaService();
+            $mediaService->delete($media->original_path);
+            $mediaService->delete($media->thumb_path);
         });
     }
 

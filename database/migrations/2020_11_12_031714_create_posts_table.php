@@ -17,13 +17,10 @@ class CreatePostsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('message')->nullable();
-            $table->json('extra')->nullable();
-            $table->boolean('is_draft')->default(true);
-            $table->boolean('success')->nullable();
+            $table->enum('status', array('drafted', 'queued', 'success', 'failed'))->default('drafted')->index();
+            $table->json('logs')->nullable();
             $table->timestamp('schedule_date')->nullable();
             $table->timestamps();
-            $table->index('user_id');
-            $table->index('is_draft');
         });
     }
 

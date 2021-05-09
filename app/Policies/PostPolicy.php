@@ -10,6 +10,16 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
+    public function edit(User $user, Post $post)
+    {
+        return $user->id == $post->user_id;
+    }
+
+    public function update(User $user, Post $post)
+    {
+        return ($user->id == $post->user_id && $post->status != 'success');
+    }
+
     public function delete(User $user, Post $post)
     {
         return $user->id == $post->user_id;
