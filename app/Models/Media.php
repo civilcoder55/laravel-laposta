@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use App\Services\MediaService;
+use function Illuminate\Events\queueable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -14,11 +15,11 @@ class Media extends Model
 
     protected static function booted()
     {
-        static::deleting(function ($media) {
-            $mediaService = new MediaService();
-            $mediaService->delete($media->original_path);
-            $mediaService->delete($media->thumb_path);
-        });
+        static::deleted(queueable(function ($media) {
+            Storage::disk('local')->delete($media->original_path);
+            Storage::disk('local')->delete($media->thumb_path);
+        }));
+
     }
 
     public function user()

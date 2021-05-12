@@ -25,7 +25,7 @@
                 events: [
                     @foreach ($posts as $post)
                     {
-                    title: 'Scheduled Post',
+                    title: '#{{$post->id}} Post',
                     start: '{{$post->schedule_date}}',
                     end: '',
                     url: "{{route('posts.edit',$post->id)}}",

@@ -35,7 +35,6 @@ class ProfileService
         return [
             "current_session" => $current_session,
             "other_sessions" => $other_sessions,
-
         ];
     }
 }

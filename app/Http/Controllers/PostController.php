@@ -47,7 +47,7 @@ class PostController extends Controller
     public function review(Post $post)
     {
         $this->authorize('review', $post);
-        $post->load(['media:id,name'])->loadCount('accounts');
+        $post->load(['media:id,name']);
         return view('main.posts.review', compact(['post']));
     }
     public function update(PostRequest $request, Post $post)

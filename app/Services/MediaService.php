@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
@@ -34,9 +33,12 @@ class MediaService
         ]);
     }
 
-    public function delete($path)
+    public function delete($media)
     {
-        Storage::disk('local')->delete($path);
+        if ($media->posts()->where(['draft' => 0, 'locked' => 0])->count() != 0) {
+            return ['success' => false, 'message' => "Media #$media->id attached to some queued posts , please delete posts first"];
+        }
+        $media->delete();
+        return ['success' => true];
     }
-
 }

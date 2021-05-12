@@ -57,7 +57,7 @@
                 <div class="col-sm-6 mt-5">
                     <div class="card">
                         <div class="card-header d-flex align-items-baseline">
-                            <h3 class="card-title">{{ $post->locked ? 'Review Post' : 'Edit Post' }}</h3>
+                            <h3 class="card-title">{{ 'Edit Post' }}</h3>
                             <div class="row d-flex align-items-baseline" style="margin-left: auto">
 
                                 <div class="col">
@@ -163,8 +163,8 @@
             schedule_date: "",
             accounts: @json($post->accounts_ids),
             draft: 1,
-            logs:@json($post->logs),
-            status:"{{ $post->status }}",
+            logs: @json($post->logs),
+            status: "{{ $post->status }}",
         }
     },
     computed: {
@@ -190,8 +190,16 @@
         deleteMedia: function() {
             $("#media").data("picker").select.val().forEach((id) => {
                 axios.delete(`/media/delete/${id}`).then((res) => {
-                    $(`option[value='${id}']`).remove();
-                    $("#media").imagepicker({});
+                    if (res.data.success) {
+                        $(`option[value='${id}']`).remove();
+                        $("#media").imagepicker({});
+                    } else {
+                        $(document).Toasts('create', {
+                            class: 'bg-danger',
+                            title: 'alert',
+                            body: res.data.message
+                        })
+                    }
                 })
             })
         },
@@ -207,22 +215,19 @@
             })
         }
     },
-    created(){
-
-    },
+    created() {},
     mounted() {
         $("#media").imagepicker();
         try {
             $('#datepicker').datetimepicker({
-            minDate: new Date(),
-            defaultDate: "{{ $post->schedule_date }}"
-        });
+                minDate: new Date(),
+                defaultDate: "{{ $post->schedule_date }}"
+            });
         } catch (error) {
             $('#datepicker').datetimepicker({
-            minDate: new Date(),
-        });
+                minDate: new Date(),
+            });
         }
-        
     }
 })
 </script>

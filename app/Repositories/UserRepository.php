@@ -47,7 +47,7 @@ class UserRepository
 
     public function getScheduledPosts()
     {
-        return $this->user->posts()->where(['is_draft' => 0, 'success' => null])->get();
+        return $this->user->posts()->where(['draft' => 0, 'locked' => 0])->get();
     }
 
     public function getMedia()

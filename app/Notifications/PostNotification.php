@@ -19,7 +19,7 @@ class PostNotification extends Notification
     {
         $this->status = $post->status == 'succeeded' ? 'success' : 'danger';
         $this->message = "Post #$post->id status changed to $post->status ";
-        $this->link = route('posts.edit', $post->id);
+        $this->link = route('posts.review', $post->id);
     }
 
     public function via($notifiable)

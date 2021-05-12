@@ -13,6 +13,7 @@ class Post extends Model
     protected $casts = [
         'logs' => 'array',
     ];
+
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -27,6 +28,7 @@ class Post extends Model
     {
         return $this->belongsToMany(Media::class);
     }
+
     public function getAccountsIdsAttribute()
     {
         return array_map(function ($item) {
@@ -44,7 +46,7 @@ class Post extends Model
     public function setLogsAttribute($value)
     {
         $old = isset($this->attributes['logs']) ? json_decode($this->attributes['logs']) : [];
-        $new = array_merge($value,$old);
+        $new = array_merge($value, $old);
         $this->attributes['logs'] = json_encode($new);
     }
 }
