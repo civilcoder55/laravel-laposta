@@ -12,12 +12,14 @@ class PostNotification extends Notification
     use Queueable;
 
     public $status;
-    public $post_id;
+    public $message;
+    public $link;
 
-    public function __construct($post, $status)
+    public function __construct($post)
     {
-        $this->status = $status;
-        $this->message = "Post #$post->id has $status update ";
+        $this->status = $post->status == 'succeeded' ? 'success' : 'danger';
+        $this->message = "Post #$post->id status changed to $post->status ";
+        $this->link = route('posts.edit', $post->id);
     }
 
     public function via($notifiable)
@@ -28,13 +30,14 @@ class PostNotification extends Notification
     public function toDatabase($notifiable): array
     {
         Cache::forget('notifications.' . $notifiable->id);
-        return ['type' => 'post', 'message' => $this->message];
+        return ['type' => 'post', 'message' => $this->message, 'link' => $this->link];
     }
 
     public function toBroadcast($notifiable)
     {
         return (new BroadcastMessage([
-            'status' => $this->status,
+            'status' => $this->status, // for front-end
+            'link' => $this->link,
             'message' => $this->message,
         ]))->onConnection('sync');
     }

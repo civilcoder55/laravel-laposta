@@ -24,16 +24,18 @@ class UserRepository
         //             )
 
         //         )->first());
-        $total = $this->user->posts()->count();
-        $queued = $this->user->posts()->where(['status' => 'queued'])->count();
-        $success = $this->user->posts()->where(['status' => 'success'])->count();
-        $failed = $this->user->posts()->where(['status' => 'failed'])->count();
+        $posts = $this->user->posts()->count();
+        $drafts = $this->user->posts()->where(['draft' => 1])->count();
+        $queued = $this->user->posts()->where(['status' => 'pending', 'draft' => 0])->count();
+        $succeeded = $this->user->posts()->where(['status' => 'succeeded', 'draft' => 0])->count();
+        $failed = $this->user->posts()->where(['status' => 'failed', 'draft' => 0])->count();
         $accounts = $this->user->accounts()->count();
 
         return [
-            'total' => $total,
+            'posts' => $posts,
+            'drafts' => $drafts,
             'queued' => $queued,
-            'success' => $success,
+            'succeeded' => $succeeded,
             'failed' => $failed,
             'accounts' => $accounts,
         ];
@@ -53,9 +55,14 @@ class UserRepository
         return $this->user->media()->get(['id', 'name']);
     }
 
-    public function getPosts()
+    public function getDraftedPosts()
     {
-        return $this->user->posts()->with(['media:name'])->withCount(['accounts'])->orderBy('updated_at', 'desc')->paginate(16);
+        return $this->user->posts()->where(['draft' => 1])->withCount(['accounts', 'media'])->orderBy('updated_at', 'desc')->paginate(16);
+    }
+
+    public function getQueuedPosts()
+    {
+        return $this->user->posts()->where(['draft' => 0])->withCount(['accounts', 'media'])->orderBy('updated_at', 'desc')->paginate(16);
     }
 
     public function getNotifications()

@@ -11,13 +11,12 @@ class LoginNotification extends Notification
 {
     use Queueable;
 
-    public $from;
-    public $on;
-
+    public $message;
+    public $link;
     public function __construct($from, $on)
     {
-        $this->from = $from;
-        $this->on = $on;
+        $this->message = "New Login From $from On $on";
+        $this->link = route('profile.index') . "#sessionsTable";
     }
 
     public function via($notifiable)
@@ -28,14 +27,15 @@ class LoginNotification extends Notification
     public function toDatabase($notifiable): array
     {
         Cache::forget('notifications.' . $notifiable->id);
-        return ['type' => 'login', 'message' => "New Login From $this->from On $this->on"];
+        return ['type' => 'login', 'message' => $this->message, 'link' => $this->link];
     }
 
     public function toBroadcast($notifiable)
     {
         return (new BroadcastMessage([
-            'status' => 'warning',
-            'message' => "New Login From $this->from On $this->on",
+            'status' => 'warning', // for front-end
+            'message' => $this->message,
+            'link' => $this->link,
         ]))->onConnection('sync');
     }
 

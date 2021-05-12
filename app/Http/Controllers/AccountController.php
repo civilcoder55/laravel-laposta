@@ -31,14 +31,8 @@ class AccountController extends Controller
     public function destroy(Account $account)
     {
         $this->authorize('delete', $account);
-        $exist = DB::table('account_post')->where(['account_id' => $account->id])->first(['id']);
-        if ($exist) {
-            session()->flash('error', "{$account->platform} account linked to some posts please delete posts first");
-        } else {
-            $account->delete();
-            session()->flash('status', "{$account->platform} account deleted successfully");
-        }
-        return redirect()->route('accounts.index');
+        $account->delete();
+        return redirect()->route('accounts.index')->with('status', "{$account->platform} account deleted successfully");;
     }
 
 }

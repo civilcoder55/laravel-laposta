@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="card-body table-responsive p-0">
-                            <table class="table text-nowrap">
+                            <table class="table table-bordered text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>Type</th>
@@ -55,8 +55,6 @@
                                         <td>Login</td>
                                         <td>
                                             {{ $notification->data['message'] }}</td>
-
-
                                         @elseif($notification->data["type"] == 'post')
                                     <tr>
                                         <td>Post</td>
@@ -83,12 +81,11 @@
 
                                 </tbody>
                             </table>
-                            <div class="card-tools">
 
-                                {{ $allNotifications->links('layouts.pagination') }}
-                            </div>
                         </div>
-                        <!-- /.card-body -->
+                        <div class="card-footer clearfix">
+                            {{ $allNotifications->links('layouts.pagination') }}
+                        </div>
                     </div>
                 </div>
             </div>

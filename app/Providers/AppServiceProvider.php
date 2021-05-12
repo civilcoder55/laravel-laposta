@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
                     ->user()
                     ->notifications()
                     ->orderBy('created_at', 'desc')
-                    ->limit(10)
+                    ->limit(6)
                     ->get();
             });
 

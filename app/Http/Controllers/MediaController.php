@@ -44,7 +44,7 @@ class MediaController extends Controller
     public function destroy(Media $media)
     {
         $this->authorize('delete', $media);
-        $res = MediaService::destroy($media);
-        return response()->json($res);
+        $media->delete();
+        return response()->json(['success' => true]);
     }
 }

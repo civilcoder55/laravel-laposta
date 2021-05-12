@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Events\PostPublishEvent;
 use App\PostaBot\Facades\Publisher;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -26,11 +27,12 @@ class PublishPost implements ShouldQueue
     public function handle()
     {
         Publisher::driver($this->account->platform)->publishPost($this->post, $this->account);
-        event(new PostPublishEvent($this->post, 'success'));
+        event(new PostPublishEvent($this->post, $this->account));
     }
 
-    public function failed()
+    public function failed(Exception $exception)
     {
-        event(new PostPublishEvent($this->post, 'danger'));
+        $error = $exception->getMessage();
+        event(new PostPublishEvent($this->post, $this->account, $error));
     }
 }

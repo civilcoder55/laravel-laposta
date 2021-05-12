@@ -12,8 +12,13 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="/css/adminlte.css" />
     <!-- Google Font: Source Sans Pro -->
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap" rel="stylesheet">
     @yield('stylesheet')
+    <style>
+        body {
+            font-family: 'Oswald', sans-serif;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -46,9 +51,9 @@
         overflow-x: hidden;">
                             <span class="dropdown-item dropdown-header">Recent
                                 Notifications</span>
-                            <div class="dropdown-divider" id="notifications_menu_indexer"></div>
+                            <div class="dropdown-divider"></div>
                             <div v-for="notification in notifications">
-                                <a class="dropdown-item">
+                                <a class="dropdown-item" :href="notification.data.link">
                                     <i class="fas mr-2"
                                         :class="getClass(notification.data.type)"></i>@{{ notification.data.message }}
                                     <span class="float-right text-muted text-sm">@{{ notification.created_at }}</span>
@@ -98,12 +103,22 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('posts.index') }}"
-                                class="nav-link {{ request()->is('posts') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-archive"></i>
-                                <p>Posts</p>
+                            <a href="{{ route('posts.index_queued') }}"
+                                class="nav-link {{ request()->is('posts/queued') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-clock"></i>
+                                <p>Queued Posts</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('posts.index_drafted') }}"
+                                class="nav-link {{ request()->is('posts/drafted') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-archive"></i>
+                                <p>Drafted Posts</p>
+                            </a>
+                        </li>
+
+
+
                         <li class="nav-item">
                             <a href="{{ route('media.index') }}"
                                 class="nav-link {{ request()->is('media') ? 'active' : '' }}">
@@ -184,7 +199,7 @@
         Echo.private('users.' + {{auth()->user()->id}}).notification((e) => {
                 $(document).Toasts('create', {
                     class: 'bg-' + e.status,
-                    title: 'login alert',
+                    title: e.type+' alert',
                     body: e.message
                 })
                 this.number = this.num + 1

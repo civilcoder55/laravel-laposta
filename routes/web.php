@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 Route::get('/login/{provider}/connect', 'SocialAuthController@connect')->where(['provider' => '(facebook|google)'])->name('connect.social');
-Route::get('/login/{provider}/redirect', 'SocialAuthController@callback');
+Route::get('/login/{provider}/callback', 'SocialAuthController@callback');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/dashboard');
@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('delete/{media}', 'MediaController@destroy')->name('media.destroy');
     });
 
-    Route::prefix('accounts')->where(['platform' => '(facebook)'])->group(function () { //will add |twitter|instagram later ...
+    Route::prefix('accounts')->where(['platform' => '(facebook|twitter)'])->group(function () { //will add |instagram later ...
         Route::get('/', 'AccountController@index')->name('accounts.index');
         Route::get('{platform}/connect', 'AccountController@connect')->name('accounts.connect');
         Route::get('{platform}/callback', 'AccountController@callback')->name('accounts.connect.callback');
@@ -43,10 +43,12 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::prefix('posts')->group(function () {
-        Route::get('/', 'PostController@index')->name('posts.index');
+        Route::get('/drafted', 'PostController@indexDrafted')->name('posts.index_drafted');
+        Route::get('/queued', 'PostController@indexQueued')->name('posts.index_queued');
         Route::get('create', 'PostController@create')->name('posts.create');
         Route::post('/', 'PostController@store')->name('posts.store');
         Route::get('{post}/edit', 'PostController@edit')->name('posts.edit');
+        Route::get('{post}/review', 'PostController@review')->name('posts.review');
         Route::post('{post}', 'PostController@update')->name('posts.update');
         Route::delete('{post}', 'PostController@destroy')->name('posts.destroy');
     });

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PostaBot;
+namespace App\PostaBot\Exceptions;
 
 use Exception;
 

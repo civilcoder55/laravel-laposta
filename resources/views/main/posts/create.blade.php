@@ -37,7 +37,7 @@
                 <div class="col-sm-6 mt-5">
                     <div class="card">
                         <div class="card-header d-flex align-items-baseline">
-                            <h3 class="card-title">Media</h3>
+                            <h3 class="card-title">Media Library</h3>
                             <div style="margin-left: auto">
                                 <label @click="deleteMedia" class="btn btn-sm btn-primary"> <i
                                         class="nav-icon fas fa-trash-alt"></i></label>
@@ -173,16 +173,8 @@
         deleteMedia: function() {
             $("#media").data("picker").select.val().forEach((id) => {
                 axios.delete(`/media/delete/${id}`).then((res) => {
-                    if (res.data.success) {
-                        $(`option[value='${id}']`).remove();
-                        $("#media").imagepicker({});
-                    } else {
-                        $(document).Toasts('create', {
-                            class: 'bg-danger',
-                            title: 'delete failed',
-                            body: res.data.message
-                        })
-                    }
+                    $(`option[value='${id}']`).remove();
+                    $("#media").imagepicker({});
                 })
             })
         },

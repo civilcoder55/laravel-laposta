@@ -12,12 +12,12 @@ class PostPolicy
 
     public function edit(User $user, Post $post)
     {
-        return $user->id == $post->user_id;
+        return $user->id == $post->user_id && $post->locked == 0;
     }
 
-    public function update(User $user, Post $post)
+    public function review(User $user, Post $post)
     {
-        return ($user->id == $post->user_id && $post->status != 'success');
+        return $user->id == $post->user_id && $post->locked == 1;
     }
 
     public function delete(User $user, Post $post)

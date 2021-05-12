@@ -18,4 +18,9 @@ class PublisherManager extends Manager
         return new \App\PostaBot\PublisherProviders\Facebook();
     }
 
+    public function createTwitterDriver()
+    {
+        return new \App\PostaBot\PublisherProviders\Twitter();
+    }
+
 }

@@ -10,14 +10,14 @@ class PostPublishEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     public $post;
-    public $status;
-
-    public function __construct($post, $status)
+    public $account;
+    public $error;
+    public function __construct($post, $account, $error = false)
     {
         $this->post = $post;
-        $this->status = $status;
+        $this->account = $account;
+        $this->error = $error;
     }
 
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Post')
+@section('title', 'Edit Post' )
 
 @section('stylesheet')
 <link rel="stylesheet" href="/css/picker.css" />
@@ -37,7 +37,7 @@
                 <div class="col-sm-6 mt-5">
                     <div class="card">
                         <div class="card-header d-flex align-items-baseline">
-                            <h3 class="card-title">Media</h3>
+                            <h3 class="card-title">Media Library</h3>
                             <div style="margin-left: auto">
                                 <label @click="deleteMedia" class="btn btn-sm btn-primary"> <i
                                         class="nav-icon fas fa-trash-alt"></i></label>
@@ -57,7 +57,7 @@
                 <div class="col-sm-6 mt-5">
                     <div class="card">
                         <div class="card-header d-flex align-items-baseline">
-                            <h3 class="card-title">Edit Post</h3>
+                            <h3 class="card-title">{{ $post->locked ? 'Review Post' : 'Edit Post' }}</h3>
                             <div class="row d-flex align-items-baseline" style="margin-left: auto">
 
                                 <div class="col">
@@ -115,10 +115,9 @@
                                 <input v-for="el in post.accounts" type="hidden" name="accounts[]" :value="el">
                                 <input type="hidden" name="schedule_date" v-model="post.schedule_date">
                                 <input type="hidden" name="draft" v-model="post.draft">
-                                <button class="btn btn-primary" type="button" :disabled="post.status == 'success'"
+                                <button class="btn btn-primary" type="button"
                                     @click="submit(0)">@{{ post.status == 'failed' ? 'Re-Schedule' : 'Schedule'}}</button>
-                                <button class="btn btn-primary" type="button" :disabled="post.status == 'success'"
-                                    @click="submit(1)">Draft</button>
+                                <button class="btn btn-primary" type="button" @click="submit(1)">Draft</button>
                             </form>
                         </div>
                     </div>
@@ -165,7 +164,7 @@
             accounts: @json($post->accounts_ids),
             draft: 1,
             logs:@json($post->logs),
-            status:"{{ $post->status }}"
+            status:"{{ $post->status }}",
         }
     },
     computed: {
@@ -182,7 +181,6 @@
                     'content-type': 'multipart/form-data'
                 }
             }).then((res) => {
-                console.log(res.data)
                 this.userMedia.push(res.data);
                 this.$nextTick(() => {
                     $("#media").imagepicker();
@@ -192,16 +190,8 @@
         deleteMedia: function() {
             $("#media").data("picker").select.val().forEach((id) => {
                 axios.delete(`/media/delete/${id}`).then((res) => {
-                    if (res.data.success) {
-                        $(`option[value='${id}']`).remove();
-                        $("#media").imagepicker({});
-                    } else {
-                        $(document).Toasts('create', {
-                            class: 'bg-danger',
-                            title: 'delete failed',
-                            body: res.data.message
-                        })
-                    }
+                    $(`option[value='${id}']`).remove();
+                    $("#media").imagepicker({});
                 })
             })
         },
@@ -222,10 +212,17 @@
     },
     mounted() {
         $("#media").imagepicker();
-        $('#datepicker').datetimepicker({
+        try {
+            $('#datepicker').datetimepicker({
             minDate: new Date(),
             defaultDate: "{{ $post->schedule_date }}"
         });
+        } catch (error) {
+            $('#datepicker').datetimepicker({
+            minDate: new Date(),
+        });
+        }
+        
     }
 })
 </script>

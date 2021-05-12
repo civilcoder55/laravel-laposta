@@ -3,7 +3,7 @@
 namespace App\PostaBot\TokenizerProviders;
 
 use App\PostaBot\Contracts\Tokenizable;
-use App\PostaBot\TokenizerException;
+use App\PostaBot\Exceptions\TokenizerException;
 use Illuminate\Support\Facades\Http;
 
 class Facebook implements Tokenizable
@@ -76,8 +76,7 @@ class Facebook implements Tokenizable
             throw new TokenizerException(($e = $response->json()['error']['message']) ? $e : "Error , Please try again .. ");
         }
 
-        $access_token = $response->json()['access_token'];
-        return $access_token;
+        return $response->json()['access_token'];
     }
 
     /**

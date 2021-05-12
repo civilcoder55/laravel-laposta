@@ -10,9 +10,15 @@ use App\Services\Facades\PostService;
 class PostController extends Controller
 {
 
-    public function index()
+    public function indexDrafted()
     {
-        $posts = UserRepository::getPosts();
+        $posts = UserRepository::getDraftedPosts();
+        return view('main.posts.index', compact(['posts']));
+    }
+
+    public function indexQueued()
+    {
+        $posts = UserRepository::getQueuedPosts();
         return view('main.posts.index', compact(['posts']));
     }
 
@@ -26,7 +32,7 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
         PostService::store($request);
-        return redirect()->route('posts.index')->with('status', 'Your Post saved successfuly');
+        return redirect()->route('posts.create')->with('status', 'Your Post saved successfuly');
     }
 
     public function edit(Post $post)
@@ -38,9 +44,15 @@ class PostController extends Controller
         return view('main.posts.edit', compact(['userAccounts', 'userMedia', 'post']));
     }
 
+    public function review(Post $post)
+    {
+        $this->authorize('review', $post);
+        $post->load(['media:id,name'])->loadCount('accounts');
+        return view('main.posts.review', compact(['post']));
+    }
     public function update(PostRequest $request, Post $post)
     {
-        $this->authorize('update', $post);
+        $this->authorize('edit', $post);
         PostService::update($request, $post);
         return redirect()->route('posts.edit', $post->id)->with('status', 'Your Post updated successfully');
     }
@@ -49,6 +61,6 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
-        return redirect()->route('posts.index')->with('status', 'Your Post deleted successfully');
+        return redirect()->back()->with('status', 'Your Post deleted successfully');
     }
 }

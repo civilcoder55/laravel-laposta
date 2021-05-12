@@ -28,7 +28,16 @@
                         <span class="info-box-icon bg-info elevation-1"><i class="fas fa-inbox"></i></span>
                         <div class="info-box-content">
                             <span class="info-box-text">Posts</span>
-                            <span class="info-box-number"> {{ $statistics['total']}} </span>
+                            <span class="info-box-number"> {{ $statistics['posts']}} </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-save"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Drafts</span>
+                            <span class="info-box-number"> {{ $statistics['drafts']}} </span>
                         </div>
                     </div>
                 </div>
@@ -47,8 +56,8 @@
                         <span class="info-box-icon bg-success elevation-1"><i class="fas fa-check-circle"></i></span>
 
                         <div class="info-box-content">
-                            <span class="info-box-text">Success</span>
-                            <span class="info-box-number">{{ $statistics['success'] }}</span>
+                            <span class="info-box-text">succeeded</span>
+                            <span class="info-box-number">{{ $statistics['succeeded'] }}</span>
                         </div>
                     </div>
                 </div>

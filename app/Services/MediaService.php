@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -40,13 +39,4 @@ class MediaService
         Storage::disk('local')->delete($path);
     }
 
-    public function destroy($media)
-    {
-        $exist = DB::table('media_post')->where(['media_id' => $media->id])->first(['id']);
-        if ($exist) {
-            return ['success' => false, 'message' => "media file #{$media->id} linked to some posts please delete posts first"];
-        }
-        $media->delete();
-        return ['success' => true];
-    }
 }

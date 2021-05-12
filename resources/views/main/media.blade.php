@@ -64,16 +64,8 @@
         deleteMedia: function() {
             $("#media").data("picker").select.val().forEach((id) => {
                 axios.delete(`/media/delete/${id}`).then((res) => {
-                    if (res.data.success) {
-                        $(`option[value='${id}']`).remove();
-                        $("#media").imagepicker({});
-                    } else {
-                        $(document).Toasts('create', {
-                            class: 'bg-danger',
-                            title: 'delete failed',
-                            body: res.data.message
-                        })
-                    }
+                    $(`option[value='${id}']`).remove();
+                    $("#media").imagepicker({});
                 })
             })
         },

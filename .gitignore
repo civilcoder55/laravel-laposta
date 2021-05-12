@@ -11,6 +11,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /app/PostaBot/TokenizerProviders/Instagram.php
-/app/PostaBot/TokenizerProviders/Twitter.php
 package-lock.json
 composer.lock
