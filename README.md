@@ -25,7 +25,7 @@ new screen later
 
 ## TO DO
 
--   [*] Adding twitter publisher.
+-   [x] Adding twitter publisher.
 -   [ ] Adding instagram publisher .
 -   [ ] writing rest tests for all features .
 -   [ ] Refactor some codes .
