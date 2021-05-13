@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,9 +39,15 @@ class Post extends Model
 
     public function getMediaIdsAttribute()
     {
-        return array_map(function ($item) {
-            return $item['id'];
-        }, $this->media->toArray());
+        // return array_map(function ($item) {
+        //     return $item['id'];
+        // }, $this->media->toArray());
+        return $this->media->toArray();
+    }
+    public function getScheduleDateAttribute($value)
+    {
+
+        return $value ? Carbon::createFromTimestamp($value) : null;
     }
 
     public function setLogsAttribute($value)

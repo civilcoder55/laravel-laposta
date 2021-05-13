@@ -68,7 +68,7 @@
                                         <div class="carousel-item active">
                                             <img src="/storage/posts/default.jpg" class="d-block w-100">
                                             <div class="carousel-caption d-none d-md-block">
-                                                <h5 style="color: black">Post attached media deleted from library by you
+                                                <h5 style="color: black">No media or just deleted by you
                                                 </h5>
                                             </div>
                                         </div>

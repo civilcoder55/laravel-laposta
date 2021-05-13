@@ -20,7 +20,7 @@ class CreatePostsTable extends Migration
             $table->boolean('draft')->default(1)->index();
             $table->enum('status', array('pending', 'succeeded', 'critical', 'failed'))->default('pending');
             $table->json('logs')->nullable();
-            $table->timestamp('schedule_date')->nullable()->index();
+            $table->bigInteger('schedule_date')->nullable()->index();
             $table->boolean('locked')->default(0)->index();
             $table->timestamps();
         });

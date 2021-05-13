@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\PostAccountsCheck;
 use App\Rules\PostMediaCheck;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostRequest extends FormRequest
@@ -42,7 +43,7 @@ class PostRequest extends FormRequest
         if (!$validator->fails()) {
             $validator->after(function ($validator) {
                 if ($this->schedule_date) {
-                    $this->merge(['schedule_date' => \DateTime::createFromFormat('m/d/Y g:i A', $this->schedule_date)->format('Y-m-d H:i:s')]);
+                    $this->merge(['schedule_date' => Carbon::createFromFormat('m/d/Y g:i A', $this->schedule_date)->timestamp]);
                 }
 
                 if (!$this->media) {

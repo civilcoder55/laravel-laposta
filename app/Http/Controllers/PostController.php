@@ -44,12 +44,6 @@ class PostController extends Controller
         return view('main.posts.edit', compact(['userAccounts', 'userMedia', 'post']));
     }
 
-    public function review(Post $post)
-    {
-        $this->authorize('review', $post);
-        $post->load(['media:id,name']);
-        return view('main.posts.review', compact(['post']));
-    }
     public function update(PostRequest $request, Post $post)
     {
         $this->authorize('edit', $post);
@@ -57,10 +51,18 @@ class PostController extends Controller
         return redirect()->route('posts.edit', $post->id)->with('status', 'Your Post updated successfully');
     }
 
+    public function review(Post $post)
+    {
+        $this->authorize('review', $post);
+        $post->load(['media:id,name']);
+        return view('main.posts.review', compact(['post']));
+    }
+
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
         $post->delete();
-        return redirect()->back()->with('status', 'Your Post deleted successfully');
+        $route = $post->draft ? 'posts.index_drafted' : 'posts.index_queued';
+        return redirect()->route($route)->with('status', 'Your Post deleted successfully');
     }
 }

@@ -20,7 +20,7 @@ class MediaController extends Controller
     public function store(MediaRequest $request)
     {
         $media = MediaService::store($request);
-        return response()->json(['success' => true, 'name' => $media->name, 'id' => $media->id]);
+        return response()->json(['success' => true, 'media' => $media]);
     }
 
     public function showOriginal($mediaName)

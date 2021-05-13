@@ -27,10 +27,11 @@ class PostService
     public function storeLog($request)
     {
         $now = Carbon::now()->toDateTimeString();
+        $then = Carbon::createFromTimestamp($request->schedule_date)->toDateTimeString();
         if ($request->draft) {
             $message = "Post saved as draft at {$now}";
         } else {
-            $message = "Post saved and scheduled at {$now} to be published at {$request->schedule_date}";
+            $message = "Post saved and scheduled at {$now} to be published at {$then}";
         }
         return [['status' => 'info', 'message' => $message]];
     }
@@ -38,10 +39,11 @@ class PostService
     public function updateLog($request)
     {
         $now = Carbon::now()->toDateTimeString();
+        $then = Carbon::createFromTimestamp($request->schedule_date)->toDateTimeString();
         if ($request->draft) {
             $message = "Post updated and saved as draft at {$now}";
         } else {
-            $message = "Post updated and scheduled at {$now} to be published at {$request->schedule_date}";
+            $message = "Post updated and scheduled at {$now} to be published at {$then}";
         }
         return [['status' => 'info', 'message' => $message]];
     }

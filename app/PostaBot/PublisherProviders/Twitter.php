@@ -16,7 +16,7 @@ class Twitter
             $secret = $account->secret;
 
             $this->connection = new TwitterOAuth($consumer_key, $consumer_secret, $token, $secret);
-
+            $this->connection->setTimeouts(30, 60);
             // split messages every 280 chars as twitter max chars is 280
             $messages_array = str_split($post->message, 280);
 

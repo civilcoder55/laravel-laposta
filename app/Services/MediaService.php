@@ -18,19 +18,21 @@ class MediaService
 
     public function store($request)
     {
-        $mediaName = md5(Str::random(40) . microtime()) . "." . $request->media->getClientOriginalExtension();
+        $media = [];
+        foreach ($request->file('media') as $file) {
+            $mediaName = md5(Str::random(40) . microtime()) . "." . $file->getClientOriginalExtension();
+            $mediaOriginalPath = $file->storeAs($this->originalPath, $mediaName); // save original at storage/app/media/{id}/original/{name}
+            $mediaThumbPath = $file->storeAs($this->thumbPath, $mediaName); // save thumbnail at storage/app/media/{id}/thumb/{name}
+            Image::make(storage_path("app/{$mediaThumbPath}"))->fit(120, 120)->save(); // resize image thumbnail
+            $m = auth()->user()->media()->create([
+                'name' => $mediaName,
+                'original_path' => $mediaOriginalPath,
+                'thumb_path' => $mediaThumbPath,
+            ]);
+            $media[] = ['id' => $m->id, 'name' => $mediaName];
+        }
 
-        $mediaOriginalPath = request('media')->storeAs($this->originalPath, $mediaName); // save original at storage/app/media/{id}/original/{name}
-
-        $mediaThumbPath = request('media')->storeAs($this->thumbPath, $mediaName); // save thumbnail at storage/app/media/{id}/thumb/{name}
-
-        Image::make(storage_path("app/{$mediaThumbPath}"))->fit(120, 120)->save(); // resize image thumbnail
-
-        return auth()->user()->media()->create([
-            'name' => $mediaName,
-            'original_path' => $mediaOriginalPath,
-            'thumb_path' => $mediaThumbPath,
-        ]);
+        return $media;
     }
 
     public function delete($media)

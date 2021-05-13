@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Post' )
+@section('title', 'Edit Post')
 
 @section('stylesheet')
-<link rel="stylesheet" href="/css/picker.css" />
 <link rel="stylesheet" href="/css/tempusdominus.css">
 @endsection
 
@@ -43,14 +42,14 @@
                                         class="nav-icon fas fa-trash-alt"></i></label>
                                 <label for="file" class="btn btn-sm btn-primary"> <i class="nav-icon fas fa-upload"></i>
                                     upload </label>
-                                <input id="file" type="file" name="media" @change="uploadMedia" style="display: none" />
+                                <input id="file" type="file" multiple @change="uploadMedia" style="display: none"
+                                    accept=".png, .jpg, .jpeg" />
                             </div>
                         </div>
                         <div class="card-body">
-                            <select id="media" multiple="multiple" class="image-picker row" v-model="post.media">
-                                <option v-for="media in userMedia" :data-img-src="mediaUrl + media.name"
-                                    :value="media.id"></option>
-                            </select>
+                            <vue-select-image ref='picker' :data-images="userMedia" :is-multiple="true"
+                                :selected-images="selectedMedia" @onselectmultipleimage="selectedImages">
+                            </vue-select-image>
                         </div>
                     </div>
                 </div>
@@ -71,9 +70,9 @@
                                                 <a class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
                                                         <input class="custom-control-input" type="checkbox"
-                                                            v-model="post.accounts" :id="account.id"
+                                                            v-model="post.accounts" :id="'ach#'+account.id"
                                                             :value="account.id">
-                                                        <label :for="account.id"
+                                                        <label :for="'ach#'+account.id"
                                                             class="custom-control-label">@{{ account.name }}
                                                             [@{{ account.type }}] </label>
                                                     </div>
@@ -111,7 +110,7 @@
                             <form ref="form" action="{{ route('posts.update',$post->id) }}" method="post">
                                 @csrf
                                 <textarea v-model="post.message" name="message" hidden></textarea>
-                                <input v-for="el in post.media" type="hidden" name="media[]" :value="el">
+                                <input v-for="el in selectedMedia" type="hidden" name="media[]" :value="el.id">
                                 <input v-for="el in post.accounts" type="hidden" name="accounts[]" :value="el">
                                 <input type="hidden" name="schedule_date" v-model="post.schedule_date">
                                 <input type="hidden" name="draft" v-model="post.draft">
@@ -146,53 +145,52 @@
 
 @section('script')
 <!-- PAGE SCRIPTS -->
-<script src="/js/picker.js"></script>
 <script src="/js/moment.js"></script>
 <script src="/js/tempusdominus.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/selectImage.js"></script>
 <script>
     const app2 = new Vue({
     el: '#app',
+    components: {
+        VueSelectImage:
+        vue_select_image.a
+    },
     data: {
         userMedia: @json($userMedia),
+        selectedMedia:@json($post->media_ids),
         mediaUrl: "{{ url('/media/thumb') }}/",
         userAccounts: @json($userAccounts),
         post: {
             message: "{{ $post->message }}",
-            media: @json($post->media_ids),
             schedule_date: "",
             accounts: @json($post->accounts_ids),
             draft: 1,
             logs: @json($post->logs),
-            status: "{{ $post->status }}",
-        }
-    },
-    computed: {
-        selectedImages: function() {
-            return $("#media").data("picker").select.val()
         }
     },
     methods: {
+        selectedImages: function(v) {
+            this.selectedMedia = v
+        },
         uploadMedia: function(e) {
             let data = new FormData();
-            data.append('media', e.target.files[0]);
+            for( var i = 0; i < e.target.files.length; i++ ){
+                data.append('media[' + i + ']', e.target.files[i]);
+            }
             axios.post('/media', data, {
                 headers: {
                     'content-type': 'multipart/form-data'
                 }
             }).then((res) => {
-                this.userMedia.push(res.data);
-                this.$nextTick(() => {
-                    $("#media").imagepicker();
-                })
+                this.userMedia = this.userMedia.concat(res.data.media);
             })
         },
         deleteMedia: function() {
-            $("#media").data("picker").select.val().forEach((id) => {
-                axios.delete(`/media/delete/${id}`).then((res) => {
+            this.selectedMedia.forEach((media) => {
+                axios.delete(`/media/delete/${media.id}`).then((res) => {
                     if (res.data.success) {
-                        $(`option[value='${id}']`).remove();
-                        $("#media").imagepicker({});
+                       this.removeMedia(media.id)
                     } else {
                         $(document).Toasts('create', {
                             class: 'bg-danger',
@@ -208,16 +206,13 @@
         },
         submit: function(draft) {
             this.post.draft = draft
-            this.post.media = $("#media").data("picker").select.val()
             this.post.schedule_date = $("#datetime").val()
             this.$nextTick(() => {
                 this.$refs.form.submit()
             })
         }
     },
-    created() {},
     mounted() {
-        $("#media").imagepicker();
         try {
             $('#datepicker').datetimepicker({
                 minDate: new Date(),

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Media')
 @section('stylesheet')
-<link rel="stylesheet" href="/css/picker.css" />
 @endsection
 @section('content')
 <div class="content-wrapper" id="app">
@@ -17,14 +16,14 @@
                                         class="nav-icon fas fa-trash-alt"></i></label>
                                 <label for="file" class="btn btn-sm btn-primary"> <i class="nav-icon fas fa-upload"></i>
                                     upload </label>
-                                <input id="file" type="file" name="media" @change="uploadMedia" style="display: none" />
+                                <input id="file" type="file" multiple @change="uploadMedia" style="display: none"
+                                    accept=".png, .jpg, .jpeg" />
                             </div>
                         </div>
                         <div class="card-body">
-                            <select id="media" multiple="multiple" class="image-picker row">
-                                <option v-for="media in userMedia" :data-img-src="mediaUrl + media.name"
-                                    :value="media.id"></option>
-                            </select>
+                            <vue-select-image ref='picker' :data-images="userMedia" :is-multiple="true"
+                                :selected-images="selectedMedia" @onselectmultipleimage="selectedImages">
+                            </vue-select-image>
                         </div>
                     </div>
                 </div>
@@ -37,36 +36,42 @@
 
 @section('script')
 <!-- PAGE SCRIPTS -->
-<script src="/js/picker.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/js/selectImage.js"></script>
 <script>
     const app2 = new Vue({
     el: '#app',
+    components: {
+        VueSelectImage:
+        vue_select_image.a
+    },
     data: {
         userMedia: @json($userMedia),
+        selectedMedia:[],
         mediaUrl: "{{ url('/media/thumb') }}/",
     },
     methods: {
+        selectedImages: function(v) {
+            this.selectedMedia = v
+        },
         uploadMedia: function(e) {
             let data = new FormData();
-            data.append('media', e.target.files[0]);
+            for( var i = 0; i < e.target.files.length; i++ ){
+                data.append('media[' + i + ']', e.target.files[i]);
+            }
             axios.post('/media', data, {
                 headers: {
                     'content-type': 'multipart/form-data'
                 }
             }).then((res) => {
-                this.userMedia.push(res.data);
-                this.$nextTick(() => {
-                    $("#media").imagepicker();
-                })
+                this.userMedia = this.userMedia.concat(res.data.media);
             })
         },
         deleteMedia: function() {
-            $("#media").data("picker").select.val().forEach((id) => {
-                axios.delete(`/media/delete/${id}`).then((res) => {
+            this.selectedMedia.forEach((media) => {
+                axios.delete(`/media/delete/${media.id}`).then((res) => {
                     if (res.data.success) {
-                        $(`option[value='${id}']`).remove();
-                        $("#media").imagepicker({});
+                       this.removeMedia(media.id)
                     } else {
                         $(document).Toasts('create', {
                             class: 'bg-danger',
@@ -77,10 +82,11 @@
                 })
             })
         },
+        removeMedia:function(id){
+            this.userMedia = this.userMedia.filter((obj)=>{return obj.id != id })
+            this.$refs.picker.removeFromMultipleSelected(id)
+        },
     },
-    mounted() {
-        $("#media").imagepicker();
-    }
 })
 </script>
 @endsection
