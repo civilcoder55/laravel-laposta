@@ -5,10 +5,9 @@ namespace App\Repositories;
 class UserRepository
 {
 
-    private static $user= auth()->user();
     public static function getStatistics()
     {
-        // dd(self::$user->posts()
+        // dd(auth()->user()->posts()
         //         ->select(
         //             array(
         //                 DB::raw('count(*) total'),
@@ -19,12 +18,12 @@ class UserRepository
         //             )
 
         //         )->first());
-        $posts = self::$user->posts()->count();
-        $drafts = self::$user->posts()->where(['draft' => 1])->count();
-        $queued = self::$user->posts()->where(['status' => 'pending', 'draft' => 0])->count();
-        $succeeded = self::$user->posts()->where(['status' => 'succeeded', 'draft' => 0])->count();
-        $failed = self::$user->posts()->where(['status' => 'failed', 'draft' => 0])->count();
-        $accounts = self::$user->accounts()->count();
+        $posts = auth()->user()->posts()->count();
+        $drafts = auth()->user()->posts()->where(['draft' => 1])->count();
+        $queued = auth()->user()->posts()->where(['status' => 'pending', 'draft' => 0])->count();
+        $succeeded = auth()->user()->posts()->where(['status' => 'succeeded', 'draft' => 0])->count();
+        $failed = auth()->user()->posts()->where(['status' => 'failed', 'draft' => 0])->count();
+        $accounts = auth()->user()->accounts()->count();
 
         return [
             'posts' => $posts,
@@ -37,43 +36,43 @@ class UserRepository
     }
     public static function getAccounts($fields = "*")
     {
-        return self::$user->accounts()->orderBy('created_at', 'desc')->get($fields);
+        return auth()->user()->accounts()->orderBy('created_at', 'desc')->get($fields);
     }
 
     public static function getScheduledPosts()
     {
-        return self::$user->posts()->where(['draft' => 0, 'locked' => 0])->get();
+        return auth()->user()->posts()->where(['draft' => 0, 'locked' => 0])->get();
     }
 
     public static function getMedia()
     {
-        return self::$user->media()->get(['id', 'name']);
+        return auth()->user()->media()->get(['id', 'name']);
     }
 
     public static function getDraftedPosts()
     {
-        return self::$user->posts()->where(['draft' => 1])->withCount(['accounts', 'media'])->orderBy('updated_at', 'desc')->paginate(16);
+        return auth()->user()->posts()->where(['draft' => 1])->withCount(['accounts', 'media'])->orderBy('updated_at', 'desc')->paginate(16);
     }
 
     public static function getQueuedPosts()
     {
-        return self::$user->posts()->where(['draft' => 0])->withCount(['accounts', 'media'])->orderBy('updated_at', 'desc')->paginate(16);
+        return auth()->user()->posts()->where(['draft' => 0])->withCount(['accounts', 'media'])->orderBy('updated_at', 'desc')->paginate(16);
     }
 
     public static function getNotifications()
     {
-        return self::$user->notifications()->orderBy('created_at', 'desc')->paginate(15);
+        return auth()->user()->notifications()->orderBy('created_at', 'desc')->paginate(15);
     }
 
     public static function getSessions()
     {
-        return self::$user->session()->orderBy('last_activity', 'desc')->get()->toArray();
+        return auth()->user()->session()->orderBy('last_activity', 'desc')->get()->toArray();
     }
 
     public static function getSocialStatus()
     {
-        $facebook = self::$user->socialAuthUser()->where(['provider' => 'facebook'])->first();
-        $google = self::$user->socialAuthUser()->where(['provider' => 'google'])->first();
+        $facebook = auth()->user()->socialAuthUser()->where(['provider' => 'facebook'])->first();
+        $google = auth()->user()->socialAuthUser()->where(['provider' => 'google'])->first();
 
         return [
             "facebook" => $facebook,

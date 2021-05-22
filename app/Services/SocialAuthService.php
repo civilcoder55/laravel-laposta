@@ -29,20 +29,25 @@ class SocialAuthService
 
         // link existing user with  social account
         if (!$socialUser && $loggedIn) {
+            $alreadyExist = User::where(['email' => $data->email])->first();
+            if ($alreadyExist) {
+                return redirect()->route('profile.index')->with('status', 'already linked to another laposta account');
+            }
             auth()->user()->socialAuthUser()->create(['provider' => $provider, 'uid' => $data->id, 'token' => $data->token]);
             return redirect()->route('profile.index');
         }
 
         //register with social account
-        $alreadyExist = User::where(['email' => $data->email])->first();
-        if (!$alreadyExist && !$socialUser && !$loggedIn) {
-            $user = User::create(['email' => $data->email, 'name' => $data->name, 'password' => Hash::make(Str::random(24))]);
+
+        if (!$socialUser && !$loggedIn) {
+            $alreadyExist = User::where(['email' => $data->email])->first();
+            $user = $alreadyExist ? $alreadyExist : User::create(['email' => $data->email, 'name' => $data->name, 'password' => Hash::make(Str::random(24))]);
             $user->socialAuthUser()->create(['provider' => $provider, 'uid' => $data->id, 'token' => $data->token]);
             Auth::login($user);
             return redirect()->route('dashboard');
         }
 
-        return redirect()->back()->with('status', 'Error happend or email conflict');
+        return redirect()->route('login')->with('status', 'Error happend ');
     }
 
     public static function revokeFacebookToken($token)

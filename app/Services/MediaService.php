@@ -7,16 +7,16 @@ use Intervention\Image\Facades\Image;
 
 class MediaService
 {
-    private static $originalPath = "media/" . auth()->user()->id . "/original";
-    private static $thumbPath = "media/" . auth()->user()->id . "/thumb";
-
     public static function store($request)
     {
         $media = [];
+        $originalPath = "media/" . auth()->user()->id . "/original";
+        $thumbPath = "media/" . auth()->user()->id . "/thumb";
+
         foreach ($request->file('media') as $file) {
             $mediaName = md5(Str::random(40) . microtime()) . "." . $file->getClientOriginalExtension();
-            $mediaOriginalPath = $file->storeAs(self::$originalPath, $mediaName); // save original at storage/app/media/{id}/original/{name}
-            $mediaThumbPath = $file->storeAs(self::$thumbPath, $mediaName); // save thumbnail at storage/app/media/{id}/thumb/{name}
+            $mediaOriginalPath = $file->storeAs($originalPath, $mediaName); // save original at storage/app/media/{id}/original/{name}
+            $mediaThumbPath = $file->storeAs($thumbPath, $mediaName); // save thumbnail at storage/app/media/{id}/thumb/{name}
             Image::make(storage_path("app/{$mediaThumbPath}"))->fit(120, 120)->save(); // resize image thumbnail
             $m = auth()->user()->media()->create([
                 'name' => $mediaName,
