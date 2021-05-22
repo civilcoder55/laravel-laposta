@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use App\Repositories\Facades\UserRepository;
-use App\Services\Facades\PostService;
+use App\Repositories\UserRepository;
+use App\Services\PostService;
 
 class PostController extends Controller
 {

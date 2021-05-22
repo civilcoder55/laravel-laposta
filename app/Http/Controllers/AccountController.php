@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\PostaBot\Contracts\Tokenizable;
-use App\Repositories\Facades\UserRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller

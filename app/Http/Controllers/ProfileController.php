@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileInfoRequest;
 use App\Http\Requests\ProfilePasswordRequest;
-use App\Repositories\Facades\UserRepository;
-use App\Services\Facades\ProfileService;
+use App\Repositories\UserRepository;
+use App\Services\ProfileService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 

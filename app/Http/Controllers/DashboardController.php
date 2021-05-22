@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\Facades\UserRepository;
+use App\Repositories\UserRepository;
 
 class DashboardController extends Controller
 {

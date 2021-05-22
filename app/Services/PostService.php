@@ -7,24 +7,24 @@ use Carbon\Carbon;
 class PostService
 {
 
-    public function store($request)
+    public static function store($request)
     {
-        $log = $this->storeLog($request);
+        $log = self::storeLog($request);
         $post = auth()->user()->posts()->create(['draft' => (bool) $request->draft, 'message' => $request->message, 'schedule_date' => $request->schedule_date, 'logs' => $log]);
         $post->media()->attach($request->media);
         $post->accounts()->attach($request->accounts);
     }
-    public function update($request, $post)
+    public static function update($request, $post)
     {
         $post->update(['draft' => (bool) $request->draft, 'message' => $request->message, 'schedule_date' => $request->schedule_date]);
         $mediaSync = $post->media()->sync($request->media);
         $accountsSync = $post->accounts()->sync($request->accounts);
         if ($post->getChanges() || ($mediaSync['attached'] || $mediaSync['detached']) || ($accountsSync['attached'] || $accountsSync['detached'])) {
-            $log = $this->updateLog($request);
+            $log = static::updateLog($request);
             $post->update(['logs' => $log]);
         }
     }
-    public function storeLog($request)
+    private static function storeLog($request)
     {
         $now = Carbon::now()->toDateTimeString();
         $then = Carbon::createFromTimestamp($request->schedule_date)->toDateTimeString();
@@ -36,7 +36,7 @@ class PostService
         return [['status' => 'info', 'message' => $message]];
     }
 
-    public function updateLog($request)
+    private static function updateLog($request)
     {
         $now = Carbon::now()->toDateTimeString();
         $then = Carbon::createFromTimestamp($request->schedule_date)->toDateTimeString();

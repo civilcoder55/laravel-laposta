@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Facades\SocialAuthService;
+use App\Services\SocialAuthService;
 use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -28,7 +28,7 @@ class SocialAuthController extends Controller
         return redirect()->route('profile.index');
     }
 
-    public function disconnectGoogle(SocialAuthService $socialAuthService)
+    public function disconnectGoogle()
     {
         $socialUser = auth()->user()->socialAuthUser()->where(['provider' => 'google'])->firstOrFail();
         $socialUser->delete();

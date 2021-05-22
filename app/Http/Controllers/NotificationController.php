@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
-use App\Repositories\Facades\UserRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Cache;
 
 class NotificationController extends Controller

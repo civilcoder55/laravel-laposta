@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MediaRequest;
 use App\Models\Media;
-use App\Repositories\Facades\UserRepository;
-use App\Services\Facades\MediaService;
+use App\Repositories\UserRepository;
+use App\Services\MediaService;
 use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller

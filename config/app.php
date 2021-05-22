@@ -180,7 +180,6 @@ return [
          */
 
         App\Providers\PostaBotServiceProvider::class,
-        App\Providers\SupportServiceProvider::class,
 
     ],
 

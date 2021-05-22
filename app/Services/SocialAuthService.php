@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class SocialAuthService
 {
 
-    public function handleUser($data, $provider)
+    public static function handleUser($data, $provider)
     {
         $socialUser = SocialAuthUser::where([['provider', $provider], ['uid', $data->id]])->first();
         $loggedIn = Auth::check();
@@ -45,12 +45,12 @@ class SocialAuthService
         return redirect()->back()->with('status', 'Error happend or email conflict');
     }
 
-    public function revokeFacebookToken($token)
+    public static function revokeFacebookToken($token)
     {
         $response = Http::delete("https://graph.facebook.com/v2.4/me/permissions?access_token={$token}");
     }
 
-    public function revokeGoogleToken($token)
+    public static function revokeGoogleToken($token)
     {
         $response = Http::withHeaders([
             'Content-type' => 'application/x-www-form-urlencoded',

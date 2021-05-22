@@ -8,21 +8,21 @@ use Intervention\Image\Facades\Image;
 
 class ProfileService
 {
-    public function storeAvatar($request)
+    public static function storeAvatar($request)
     {
-        $this->deleteOldAvatar();
+        self::deleteOldAvatar();
         $avatarPath = $request->_avatar->store('profile', 'public');
         Image::make(public_path("storage/{$avatarPath}"))->fit(128, 128)->save();
         auth()->user()->update(['avatar' => $avatarPath]);
     }
 
-    public function deleteOldAvatar()
+    private static function deleteOldAvatar()
     {
         $oldAvatarPath = auth()->user()->avatar;
         Storage::disk('local')->delete("public/{$oldAvatarPath}");
     }
 
-    public function formatSessions($s)
+    public static function formatSessions($s)
     {
         $other_sessions = array_filter($s, function ($item) use (&$current_session) {
             if (Session::getId() == $item['id']) {
