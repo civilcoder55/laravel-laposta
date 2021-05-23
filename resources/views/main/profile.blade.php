@@ -133,7 +133,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="col-sm-4 mt-5">
+                <div class="col-auto mt-5">
                     <div class="card">
                         <div class="card-header d-flex align-items-baseline">
                             <h3 class="card-title">Sessions</h3>
@@ -144,42 +144,34 @@
                                     <tr>
                                         <th>IP</th>
                                         <th>Browser</th>
+                                        <th>Device</th>
+                                        <th>Os</th>
                                         <th>Last Activity</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{ $sessions['current_session']['ip_address'] }}</td>
-                                        @php
-                                        $agent = get_browser($sessions['current_session']['user_agent'], true);
-                                        @endphp
-                                        <td>
-                                            This session
-                                        </td>
-                                        <td>
-                                            Active Now
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <a
-                                                href='{{ route('profile.session.destroy', [$sessions['current_session']['pub_id']]) }}'><i
-                                                    class="nav-icon fas fa-trash-alt"></i></a>
-                                        </td>
-                                    </tr>
-                                    @foreach ($sessions['other_sessions'] as $session)
+                                    @foreach ($sessions as $session)
                                     <tr>
                                         <td>{{ $session['ip_address'] }}</td>
-                                        @php
-                                        $agent = get_browser($session['user_agent'], true);
-                                        @endphp
                                         <td>
-                                            {{ $agent['browser'] }} on {{ $agent['platform'] }}
+                                            {{ $session['browser'] }}
                                         </td>
-                                        <td>{{ \Carbon\Carbon::now()->timestamp - $session['last_activity'] < 300 ? 'Active Now' : \Carbon\Carbon::createFromTimestamp($session['last_activity'])->diffForHumans() }}
+                                        <td>
+                                            {{ $session['device'] }}
+                                        </td>
+                                        <td>
+                                            {{ $session['os'] }}
+                                        </td>
+                                        <td>{{ $session['last_activity'] }}
                                         </td>
                                         <td style="text-align: center;">
+                                            @if ($session['status'])
+                                            {{ $session['status'] }}
+                                            @else
                                             <a href='{{ route('profile.session.destroy', [$session['pub_id']]) }}'><i
                                                     class="nav-icon fas fa-trash-alt"></i></a>
+                                            @endif
                                         </td>
                                     </tr>
                                     @endforeach
