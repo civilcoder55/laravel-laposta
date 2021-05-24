@@ -6,6 +6,7 @@ use App\Notifications\LoginNotification;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
+use WhichBrowser\Parser;
 
 class SuccessfulLoginListener
 {
@@ -21,10 +22,9 @@ class SuccessfulLoginListener
         if ($event->user->created_at->timestamp + 1 >= Carbon::now()->timestamp) {
             return;
         }
-
-        $agent = get_browser($this->request->server('HTTP_USER_AGENT'), true);
-        $from = $agent['browser'];
-        $on = $agent['platform'];
+        $agent = new Parser($this->request->server('HTTP_USER_AGENT'));
+        $from = $agent->browser->toString();
+        $on = $agent->os->toString();
         $event->user->notify(new LoginNotification($from, $on)); // fire LoginNotification which store notification in database and brodcast it
 
     }

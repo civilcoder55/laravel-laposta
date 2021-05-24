@@ -36,7 +36,7 @@ class LoginNotification extends Notification
             'status' => 'warning', // for front-end
             'message' => $this->message,
             'link' => $this->link,
-        ]))->onConnection('sync');
+        ]));
     }
 
     public function broadcastType()
