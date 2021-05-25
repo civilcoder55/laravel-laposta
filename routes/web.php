@@ -16,6 +16,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::prefix('notifications')->group(function () {
         Route::get('/', 'NotificationController@index')->name('notifications.index');
+        Route::put('/{notification}', 'NotificationController@read')->name('notifications.read');
         Route::delete('delete/all', 'NotificationController@destroyAll')->name('notifications.destroy.all');
         Route::delete('delete/{notification}', 'NotificationController@destroy')->name('notifications.destroy');
     });

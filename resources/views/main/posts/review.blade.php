@@ -127,11 +127,6 @@
 @endsection
 
 @section('script')
-<!-- PAGE SCRIPTS -->
-<script src="/js/picker.js"></script>
-<script src="/js/moment.js"></script>
-<script src="/js/tempusdominus.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     const app2 = new Vue({
     el: '#app',

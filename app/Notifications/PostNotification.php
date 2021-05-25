@@ -36,15 +36,15 @@ class PostNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return (new BroadcastMessage([
-            'status' => $this->status, // for front-end
-            'link' => $this->link,
-            'message' => $this->message,
+            'id' => $this->id,
+            'data' => [
+                'status' => $this->status, // for front-end
+                'link' => $this->link,
+                'message' => $this->message,
+                'type' => 'post',
+            ],
+            'created_at' => 'just now',
         ]))->onConnection('sync');
-    }
-
-    public function broadcastType()
-    {
-        return 'post';
     }
 
     public function toArray($notifiable)

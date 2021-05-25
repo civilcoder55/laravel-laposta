@@ -36,7 +36,6 @@
 
 @section('script')
 <!-- PAGE SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/selectImage.js"></script>
 <script>
     const app2 = new Vue({

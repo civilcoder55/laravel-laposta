@@ -33,15 +33,15 @@ class LoginNotification extends Notification
     public function toBroadcast($notifiable)
     {
         return (new BroadcastMessage([
-            'status' => 'warning', // for front-end
-            'message' => $this->message,
-            'link' => $this->link,
-        ]));
-    }
-
-    public function broadcastType()
-    {
-        return 'login';
+            'id' => $this->id,
+            'data' => [
+                'status' => 'warning', // for front-end
+                'message' => $this->message,
+                'link' => $this->link,
+                'type' => 'login',
+            ],
+            'created_at' => 'just now',
+        ]))->onConnection('sync');
     }
 
     public function toArray($notifiable)

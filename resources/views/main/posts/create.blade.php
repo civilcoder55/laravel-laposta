@@ -137,7 +137,6 @@
 <!-- PAGE SCRIPTS -->
 <script src="/js/moment.js"></script>
 <script src="/js/tempusdominus.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/js/selectImage.js"></script>
 <script>
     const app2 = new Vue({

@@ -18,6 +18,25 @@
         body {
             font-family: 'Oswald', sans-serif;
         }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scroll-hide {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .scroll-hide {
+            overflow-y: scroll;
+            height: auto;
+            max-height: 500px;
+        }
     </style>
 </head>
 
@@ -46,13 +65,16 @@
                             <i class="far fa-bell"></i>
                             <span class="badge badge-warning navbar-badge">@{{ number }}</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="height: auto;
-        max-height: 500px;
-        overflow-x: hidden;">
-                            <span class="dropdown-item dropdown-header">Recent
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right scroll-hide">
+                            <span class=" dropdown-item dropdown-header">Recent
                                 Notifications</span>
                             <div class="dropdown-divider"></div>
-                            <div v-for="notification in notifications">
+                            <div v-for="notification in notifications" :id="notification.id"
+                                :read="notification.read_at?true:false" v-observe-visibility="{
+                                callback: visibilityChanged,
+                                once: true,
+                                throttle: 800
+                              }">
                                 <a class="dropdown-item " :href="notification.data.link">
                                     <i class="fas mr-2"
                                         :class="getClass(notification.data.type)"></i>@{{ notification.data.message }}
@@ -177,7 +199,10 @@
     <script src="/js/adminlte.js"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-observe-visibility/dist/vue-observe-visibility.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        Vue.use(VueObserveVisibility)
         const app1 = new Vue({
     el: '#notifications',
     data: {
@@ -187,7 +212,7 @@
     computed: {
         num: function() {
             return (parseInt(this.number) || 0)
-        }
+        },
     },
     methods: {
         clearNum: function() {
@@ -199,21 +224,35 @@
                 post: "fa-envelope"
             }
             return classes[type]
+        },
+        unreaded:function(){
+            let total = this.notifications.filter(n => !n.read_at).length 
+            this.number = total == 0 ? "" : total ;
+        },
+        visibilityChanged:function(isVisible, entry){
+            if(isVisible && !entry.target.getAttribute("read")){
+                axios.put("{{ route('notifications.read',"") }}" + `/${entry.target.id}`).then((res) => {
+                    this.number = this.num == 0 ? "" : this.number-1
+            })
+            }
         }
     },
     created() {
         Echo.private('users.' + {{auth()->user()->id}}).notification((e) => {
                 $(document).Toasts('create', {
-                    class: 'bg-' + e.status,
-                    title: e.type+' alert',
-                    body: e.message
+                    class: 'bg-' + e.data.status,
+                    title: e.data.type+' alert',
+                    body: e.data.message,
+                    autohide:true,
+                    delay:5000,
+                    position:'bottomRight',
                 })
                 this.number = this.num + 1
-                this.notifications.unshift({
-                    data: e,
-                    created_at: 'just now'
-                })
+                this.notifications.unshift(e)
             })
+    },
+    mounted(){
+        this.unreaded()
     }
 })
     </script>

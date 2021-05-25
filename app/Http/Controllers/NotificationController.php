@@ -15,6 +15,14 @@ class NotificationController extends Controller
         return view('main.notifications', compact('allNotifications'));
     }
 
+    public function read(Notification $notification)
+    {
+        $this->authorize('read', $notification);
+        $notification->markAsRead();
+        Cache::forget('notifications.' . auth()->user()->id);
+        return response()->json(['success' => true]);
+    }
+
     public function destroy(Notification $notification)
     {
         $this->authorize('delete', $notification);
