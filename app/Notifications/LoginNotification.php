@@ -13,9 +13,9 @@ class LoginNotification extends Notification
 
     public $message;
     public $link;
-    public function __construct($from, $on)
+    public function __construct($browser, $os)
     {
-        $this->message = "New Login From $from On $on";
+        $this->message = "New Login From $browser On $os";
         $this->link = route('profile.index') . "#sessionsTable";
     }
 

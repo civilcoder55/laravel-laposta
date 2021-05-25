@@ -21,9 +21,9 @@
     </style>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed dark-mode accent-light">
     <div class="wrapper">
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-dark">
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -53,7 +53,7 @@
                                 Notifications</span>
                             <div class="dropdown-divider"></div>
                             <div v-for="notification in notifications">
-                                <a class="dropdown-item" :href="notification.data.link">
+                                <a class="dropdown-item " :href="notification.data.link">
                                     <i class="fas mr-2"
                                         :class="getClass(notification.data.type)"></i>@{{ notification.data.message }}
                                     <span class="float-right text-muted text-sm">@{{ notification.created_at }}</span>
@@ -76,7 +76,7 @@
                 <span class="brand-text font-weight-bolder">La Posta</span>
             </a>
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="user-panel pt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="/storage/{{ auth()->user()->avatar ?? 'profile/default.png' }} "
                             class="img-circle elevation-2" alt="User Image" />

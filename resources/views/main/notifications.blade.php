@@ -39,7 +39,7 @@
                             </div>
                         </div>
                         <div class="card-body table-responsive p-0">
-                            <table class="table table-bordered text-nowrap">
+                            <table class="table text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>Type</th>

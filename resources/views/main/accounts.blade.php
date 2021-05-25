@@ -30,20 +30,24 @@
                             <h3 class="card-title">Accounts</h3>
                             <div style="margin-left: auto">
 
-                                <label for="file" class="btn btn-sm" style="background-color: #3b5998;color:white"
+                                <label class="btn btn-sm" style="background-color: #3b5998;color:white"
                                     onclick="location.href = '{{ route('accounts.connect', 'facebook') }}';"> <i
                                         class="nav-icon fab fa-facebook-f pr-1"></i>
                                     Add Facebook Account </label>
-                                <label for="file" class="btn btn-sm"
+                                {{-- <label class="btn btn-sm"
                                     onclick="location.href = '{{ route('accounts.connect', 'instagram') }}';"
-                                    style="background: #f09433; 
-                                                                                                                                                                                                                                                                                                    background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); 
-                                                                                                                                                                                                                                                                                                    background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
-                                                                                                                                                                                                                                                                                                    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); 
-                                                                                                                                                                                                                                                                                                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', endColorstr='#bc1888',GradientType=1 );color:white">
-                                    <i class="nav-icon fab fa-instagram pr-1"></i>
-                                    Add instagram Account </label>
-                                <label for="file" class="btn btn-sm" style="background-color: #00acee;color:white"
+                                style="background: #f09433;
+                                background: -moz-linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366
+                                75%, #bc1888 100%);
+                                background: -webkit-linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366
+                                75%,#bc1888 100%);
+                                background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366
+                                75%,#bc1888 100%);
+                                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433',
+                                endColorstr='#bc1888',GradientType=1 );color:white">
+                                <i class="nav-icon fab fa-instagram pr-1"></i>
+                                Add instagram Account </label> --}}
+                                <label class="btn btn-sm" style="background-color: #00acee;color:white"
                                     onclick="location.href = '{{ route('accounts.connect', 'twitter') }}';"> <i
                                         class="nav-icon fab fa-twitter pr-1"></i>
                                     Add Twitter Account </label>
