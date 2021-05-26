@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Repositories\UserRepository;
 use App\Services\MediaService;
 use Illuminate\Support\Facades\Storage;
+use phpDocumentor\Reflection\Types\Mixed_;
 
 class MediaController extends Controller
 {
@@ -25,7 +26,7 @@ class MediaController extends Controller
 
     public function showOriginal($mediaName)
     {
-        $userId = auth()->user()->id;
+        $userId = auth()->id();
         if (preg_match('/^[a-f0-9]{32}.(jpg|png|jpeg)$/i', $mediaName) && Storage::disk('local')->exists("media/{$userId}/original/{$mediaName}")) {
             return response()->file(storage_path("app/media/{$userId}/original/{$mediaName}"));
         }
@@ -34,7 +35,7 @@ class MediaController extends Controller
 
     public function showThumb($mediaName)
     {
-        $userId = auth()->user()->id;
+        $userId = auth()->id();
         if (preg_match('/^[a-f0-9]{32}.(jpg|png|jpeg)$/i', $mediaName) && Storage::disk('local')->exists("media/{$userId}/thumb/{$mediaName}")) {
             return response()->file(storage_path("app/media/{$userId}/thumb/{$mediaName}"));
         }

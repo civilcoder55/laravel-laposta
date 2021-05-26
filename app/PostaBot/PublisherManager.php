@@ -2,25 +2,27 @@
 
 namespace App\PostaBot;
 
+use App\PostaBot\PublisherProviders\Facebook;
+use App\PostaBot\PublisherProviders\Twitter;
 use Exception;
 use Illuminate\Support\Manager;
 
 class PublisherManager extends Manager
 {
 
-    public function getDefaultDriver()
+    public function getDefaultDriver():Exception
     {
         throw new Exception('invalid driver');
     }
 
-    public function createFacebookDriver()
+    public function createFacebookDriver():Facebook
     {
-        return new \App\PostaBot\PublisherProviders\Facebook();
+        return new Facebook();
     }
 
-    public function createTwitterDriver()
+    public function createTwitterDriver():Twitter
     {
-        return new \App\PostaBot\PublisherProviders\Twitter();
+        return new Twitter();
     }
 
 }

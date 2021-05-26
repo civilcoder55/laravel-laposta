@@ -9,7 +9,7 @@ class DashboardController extends Controller
     public function index()
     {
         $statistics = UserRepository::getStatistics();
-        return view('main.dashboard', compact(['statistics']));
+        return view('main.dashboard', compact('statistics'));
     }
 
     public function calendar()

@@ -21,18 +21,18 @@ class AccountController extends Controller
         return $Tokenizer->redirect();
     }
 
-    // handling redirection callback form plaform and add account to database
-    public function callback($platform, Tokenizable $Tokenizer)
+    // handling redirection callback form platform and add account to database
+    public function callback($platform, Tokenizable $Tokenizer): \Illuminate\Http\RedirectResponse
     {
         $Tokenizer->getAndSaveData();
         return redirect()->route('accounts.index')->with('status', "{$platform} account added successfully");
     }
 
-    public function destroy(Account $account)
+    public function destroy(Account $account): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('delete', $account);
         $account->delete();
-        return redirect()->route('accounts.index')->with('status', "{$account->platform} account deleted successfully");;
+        return redirect()->route('accounts.index')->with('status', "{$account->platform} account deleted successfully");
     }
 
 }
