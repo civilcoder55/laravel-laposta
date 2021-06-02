@@ -109,13 +109,13 @@
                         <div class="card-footer">
                             <form ref="form" action="{{ route('posts.update',$post->id) }}" method="post">
                                 @csrf
+                                @method('PUT')
                                 <textarea v-model="post.message" name="message" hidden></textarea>
                                 <input v-for="el in selectedMedia" type="hidden" name="media[]" :value="el.id">
                                 <input v-for="el in post.accounts" type="hidden" name="accounts[]" :value="el">
                                 <input type="hidden" name="schedule_date" v-model="post.schedule_date">
                                 <input type="hidden" name="draft" v-model="post.draft">
-                                <button class="btn btn-primary" type="button"
-                                    @click="submit(0)">@{{ post.status == 'failed' ? 'Re-Schedule' : 'Schedule'}}</button>
+                                <button class="btn btn-primary" type="button" @click="submit(0)">'Schedule'</button>
                                 <button class="btn btn-primary" type="button" @click="submit(1)">Draft</button>
                             </form>
                         </div>

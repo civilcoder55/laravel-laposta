@@ -43,15 +43,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('delete/{account}', 'AccountController@destroy')->name('accounts.destroy');
     });
 
-    Route::prefix('posts')->group(function () {
-        Route::get('/drafted', 'PostController@indexDrafted')->name('posts.index_drafted');
-        Route::get('/queued', 'PostController@indexQueued')->name('posts.index_queued');
-        Route::get('create', 'PostController@create')->name('posts.create');
-        Route::post('/', 'PostController@store')->name('posts.store');
-        Route::get('{post}/edit', 'PostController@edit')->name('posts.edit');
-        Route::get('{post}/review', 'PostController@review')->name('posts.review');
-        Route::post('{post}', 'PostController@update')->name('posts.update');
-        Route::delete('{post}', 'PostController@destroy')->name('posts.destroy');
-    });
+    Route::resource('posts', 'PostController');
 
 });

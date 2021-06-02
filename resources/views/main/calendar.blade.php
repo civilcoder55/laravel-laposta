@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Media')
+@section('title', 'Calendar')
 @section('stylesheet')
 <link rel="stylesheet" href="/css/calendar.css" />
 @endsection

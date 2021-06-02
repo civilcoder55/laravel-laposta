@@ -79,7 +79,7 @@
                                         <td>
                                             <form action="{{ route('accounts.destroy',$account->id) }}" method="post">
                                                 @csrf
-                                                <input type="hidden" name="_method" value="DELETE">
+                                                @method('DELETE')
                                                 <button class="btn" type="submit"
                                                     style="margin-left: 18px ;padding:0 0;color:#007bff"><i
                                                         class="nav-icon fas fa-trash-alt"></i></button>

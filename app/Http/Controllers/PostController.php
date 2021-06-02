@@ -10,15 +10,13 @@ use App\Services\PostService;
 class PostController extends Controller
 {
 
-    public function indexDrafted()
+    public function index()
     {
-        $posts = UserRepository::getDraftedPosts();
-        return view('main.posts.index', compact(['posts']));
-    }
-
-    public function indexQueued()
-    {
-        $posts = UserRepository::getQueuedPosts();
+        if (request()->query('type') == 'drafted') {
+            $posts = UserRepository::getDraftedPosts();
+        } else {
+            $posts = UserRepository::getQueuedPosts();
+        }
         return view('main.posts.index', compact(['posts']));
     }
 
@@ -35,6 +33,12 @@ class PostController extends Controller
         return redirect()->route('posts.create')->with('status', 'Your Post saved successfuly');
     }
 
+    public function show(Post $post)
+    {
+        $this->authorize('show', $post);
+        $post->load(['media:id,name']);
+        return view('main.posts.show', compact(['post']));
+    }
     public function edit(Post $post)
     {
         $this->authorize('edit', $post);

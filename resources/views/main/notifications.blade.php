@@ -30,7 +30,7 @@
                             <div style="margin-left: auto">
                                 <form id="delAllForm" action="{{ route('notifications.destroy.all') }}" method="post">
                                     @csrf
-                                    <input type="hidden" name="_method" value="DELETE">
+                                    @method('DELETE')
                                 </form>
                                 <label class="btn btn-sm btn-primary" style="color:white"
                                     onclick="document.getElementById('delAllForm').submit()"> <i
@@ -69,7 +69,7 @@
                                             <form action="{{ route('notifications.destroy', [$notification->id]) }}"
                                                 method="post">
                                                 @csrf
-                                                <input type="hidden" name="_method" value="DELETE">
+                                                @method('DELETE')
                                                 <button class="btn" type="submit"
                                                     style="margin-left: 18px ;padding:0 0;color:#007bff"><i
                                                         class="nav-icon fas fa-trash-alt"></i></button>
@@ -83,9 +83,11 @@
                             </table>
 
                         </div>
+                        @if ($allNotifications->hasPages())
                         <div class="card-footer clearfix">
                             {{ $allNotifications->links('layouts.pagination') }}
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

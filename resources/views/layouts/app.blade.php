@@ -124,16 +124,18 @@
                                 <p>New Post</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="{{ route('posts.index_queued') }}"
-                                class="nav-link {{ request()->is('posts/queued') ? 'active' : '' }}">
+                            <a href="{{ route('posts.index') }}"
+                                class="nav-link {{ (request()->query('type') != 'drafted' && request()->is('posts')) ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-clock"></i>
                                 <p>Queued Posts</p>
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a href="{{ route('posts.index_drafted') }}"
-                                class="nav-link {{ request()->is('posts/drafted') ? 'active' : '' }}">
+                            <a href="{{ route('posts.index',['type'=>'drafted']) }}"
+                                class="nav-link {{ (request()->query('type') == 'drafted' && request()->is('posts') ) ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-archive"></i>
                                 <p>Drafted Posts</p>
                             </a>

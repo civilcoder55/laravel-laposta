@@ -7,33 +7,25 @@ class UserRepository
 
     public static function getStatistics()
     {
-        // dd(auth()->user()->posts()
-        //         ->select(
-        //             array(
-        //                 DB::raw('count(*) total'),
-        //                 DB::raw('sum(case when status = "drafted" then 1 else 0 end) drafted'),
-        //                 DB::raw('sum(case when status = "queued" then 1 else 0 end) queued'),
-        //                 DB::raw('sum(case when status = "success" then 1 else 0 end) success'),
-        //                 DB::raw('sum(case when status = "failed" then 1 else 0 end) failed'),
-        //             )
 
-        //         )->first());
-        $posts = auth()->user()->posts()->count();
-        $drafts = auth()->user()->posts()->where(['draft' => 1])->count();
-        $queued = auth()->user()->posts()->where(['status' => 'pending', 'draft' => 0])->count();
-        $succeeded = auth()->user()->posts()->where(['status' => 'succeeded', 'draft' => 0])->count();
-        $failed = auth()->user()->posts()->where(['status' => 'failed', 'draft' => 0])->count();
+        $posts = auth()->user()->posts()->selectRaw("count(*) AS total,
+        SUM(IF(draft = 1 , 1, 0)) AS drafts,
+        SUM(IF(draft = 0 AND status='pending' , 1, 0)) AS queued,
+        SUM(IF(draft = 0 AND status='succeeded', 1, 0)) AS succeeded,
+        SUM(IF(draft = 1 AND status='failed', 1, 0)) AS failed"
+        )->first();
         $accounts = auth()->user()->accounts()->count();
 
         return [
-            'posts' => $posts,
-            'drafts' => $drafts,
-            'queued' => $queued,
-            'succeeded' => $succeeded,
-            'failed' => $failed,
+            'posts' => $posts->total,
+            'drafts' => $posts->drafts ?? 0,
+            'queued' => $posts->queued ?? 0,
+            'succeeded' => $posts->succeeded ?? 0,
+            'failed' => $posts->failed ?? 0,
             'accounts' => $accounts,
         ];
     }
+
     public static function getAccounts($fields = "*")
     {
         return auth()->user()->accounts()->orderBy('created_at', 'desc')->get($fields);

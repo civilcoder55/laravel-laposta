@@ -1,10 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Review Post')
-
-@section('stylesheet')
-
-@endsection
+@section('title', 'Post Preview')
 
 @section('content')
 <div class="content-wrapper" id="app">
@@ -92,7 +88,7 @@
                         <div class="card-footer d-flex align-items-baseline">
                             <form action="{{ route('posts.destroy', $post->id) }}" method="post">
                                 @csrf
-                                <input type="hidden" name="_method" value="DELETE">
+                                @method('DELETE')
                                 <button type="submit" class="btn btn-default btn-sm "><i class="fas fa-trash-alt"></i>
                                     Delete Post</button>
 
