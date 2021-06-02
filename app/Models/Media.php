@@ -13,6 +13,8 @@ class Media extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['src'];
+
     protected static function booted()
     {
         static::deleted(queueable(function ($media) {
@@ -30,5 +32,10 @@ class Media extends Model
     public function posts()
     {
         return $this->belongsToMany(Post::class);
+    }
+
+    public function getSrcAttribute()
+    {
+        return route('media.show.thumb', $this->name);
     }
 }
