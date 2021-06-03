@@ -38,7 +38,7 @@ class UserRepository
 
     public static function getMedia()
     {
-        return auth()->user()->media()->get(['id', 'src']);
+        return auth()->user()->media()->get(['id', 'name']);
     }
 
     public static function getDraftedPosts()

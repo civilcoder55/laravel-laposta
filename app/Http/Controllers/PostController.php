@@ -30,7 +30,7 @@ class PostController extends Controller
     public function store(PostRequest $request)
     {
         PostService::store($request);
-        return redirect()->route('posts.create')->with('status', 'Your Post saved successfuly');
+        return redirect()->route('posts.create')->with('status', 'your post saved successfuly');
     }
 
     public function show(Post $post)
@@ -52,7 +52,7 @@ class PostController extends Controller
     {
         $this->authorize('edit', $post);
         PostService::update($request, $post);
-        return redirect()->route('posts.edit', $post->id)->with('status', 'Your Post updated successfully');
+        return redirect()->route('posts.edit', $post->id)->with('status', 'your post updated successfully');
     }
 
     public function review(Post $post)
@@ -66,7 +66,6 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post);
         $post->delete();
-        $route = $post->draft ? 'posts.index_drafted' : 'posts.index_queued';
-        return redirect()->route($route)->with('status', 'Your Post deleted successfully');
+        return redirect()->route('posts.index', ($post->draft ? ['type' => 'drafted'] : ''))->with('status', 'your post deleted successfully');
     }
 }

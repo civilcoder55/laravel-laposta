@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-header d-flex align-items-baseline">
-      <h3 class="card-title">New Post</h3>
+      <h3 class="card-title">Edit Post</h3>
       <div class="row d-flex align-items-baseline" style="margin-left: auto">
         <div class="col">
           <div class="dropdown">
@@ -44,7 +44,8 @@
       </div>
     </div>
     <div class="card-body">
-      <form action="/posts" method="post">
+      <form :action="`/posts/${post.id}`" method="post">
+        <input type="hidden" name="_method" value="PUT" />
         <input type="hidden" name="_token" :value="this.csrfToken" />
         <div class="form-group">
           <label>Post</label>
@@ -107,25 +108,27 @@
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
 import Bus from "./EventBus";
+import moment from "moment";
 export default {
   components: { DatePicker },
   props: [
     "userAccounts",
-    "oldMessage",
-    "oldAccounts",
-    "oldDate",
-    "oldDraft",
-    "oldMedia",
+    "selectedAccounts",
+    "selectedMedia",
+    "editablePost",
     "csrfToken",
   ],
   data() {
     return {
       post: {
-        message: this.oldMessage || "",
-        accounts: this.oldAccounts || [],
-        media: this.oldMedia || [],
-        schedule_date: this.oldDate || "",
-        draft: this.oldDraft || "1",
+        id: this.editablePost.id,
+        message: this.editablePost.message,
+        accounts: this.selectedAccounts,
+        media: this.selectedMedia || [],
+        schedule_date: moment(this.editablePost.schedule_date).format(
+          "DD/MM/YYYY hh:mm A"
+        ),
+        draft: this.editablePost.draft || "1",
       },
     };
   },

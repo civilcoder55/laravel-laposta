@@ -23,7 +23,7 @@ class MediaService
                 'original_path' => $mediaOriginalPath,
                 'thumb_path' => $mediaThumbPath,
             ]);
-            $media[] = ['id' => $m->id, 'name' => $mediaName];
+            $media[] = ['id' => $m->id, 'src' => route('media.show.thumb', $mediaName)];
         }
 
         return $media;

@@ -34,7 +34,7 @@ class PostRequest extends FormRequest
             'message' => ['required_if:draft,==,0', 'string', 'nullable'],
             'media' => ['array', 'min:1', new PostMediaCheck],
             'media.*' => ['distinct', 'integer'],
-            'schedule_date' => ['required_if:draft,==,0', 'date_format:m/d/Y g:i A', 'after:now', 'nullable'],
+            'schedule_date' => ['required_if:draft,==,0', 'date_format:d/m/Y h:i A', 'after:now', 'nullable'],
         ];
     }
 
@@ -43,7 +43,7 @@ class PostRequest extends FormRequest
         if (!$validator->fails()) {
             $validator->after(function ($validator) {
                 if ($this->schedule_date) {
-                    $this->merge(['schedule_date' => Carbon::createFromFormat('m/d/Y g:i A', $this->schedule_date)->timestamp]);
+                    $this->merge(['schedule_date' => Carbon::createFromFormat('d/m/Y h:i A', $this->schedule_date)->timestamp]);
                 }
 
                 if (!$this->media) {

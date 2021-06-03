@@ -195,8 +195,7 @@
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="/js/jquery.js"></script>
-    <!-- Bootstrap -->
-    <script src="/js/bootstrap.js"></script>
+
     <!-- AdminLTE App -->
     <script src="/js/adminlte.js"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
