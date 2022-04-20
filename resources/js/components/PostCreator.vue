@@ -66,7 +66,7 @@
               type="datetime"
               format="DD/MM/YYYY hh:mm A"
               value-type="format"
-              :disabled-date="(date) => date <= new Date()"
+              :disabled-date="(date) => date < new Date(new Date().toLocaleDateString().slice(0, 10))"
               :input-attr="{ name: 'schedule_date' }"
             ></date-picker>
           </div>

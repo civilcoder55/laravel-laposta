@@ -17,9 +17,9 @@ class PostNotification extends Notification
 
     public function __construct($post)
     {
-        $this->status = $post->status == 'succeeded' ? 'success' : 'danger';
+        $this->status = $post->status == 'succeeded' ? 'success' : 'error';
         $this->message = "Post #$post->id status changed to $post->status ";
-        $this->link = route('posts.review', $post->id);
+        $this->link = route('posts.show', $post->id);
     }
 
     public function via($notifiable)
@@ -30,7 +30,7 @@ class PostNotification extends Notification
     public function toDatabase($notifiable): array
     {
         Cache::forget('notifications.' . $notifiable->id);
-        return ['type' => 'post', 'message' => $this->message, 'link' => $this->link];
+        return ['status' => $this->status, 'type' => 'post', 'message' => $this->message, 'link' => $this->link];
     }
 
     public function toBroadcast($notifiable)
@@ -39,12 +39,12 @@ class PostNotification extends Notification
             'id' => $this->id,
             'data' => [
                 'status' => $this->status, // for front-end
-                'link' => $this->link,
-                'message' => $this->message,
                 'type' => 'post',
+                'message' => $this->message,
+                'link' => $this->link,
             ],
             'created_at' => 'just now',
-        ]))->onConnection('sync');
+        ]));
     }
 
     public function toArray($notifiable)

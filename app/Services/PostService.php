@@ -16,12 +16,15 @@ class PostService
     }
     public static function update($request, $post)
     {
-        $post->update(['draft' => (bool) $request->draft, 'message' => $request->message, 'schedule_date' => $request->schedule_date]);
+        $post->draft = (bool) $request->draft ? 1 : 0;
+        $post->message = $request->message;
+        $post->schedule_date = $request->schedule_date;
         $mediaSync = $post->media()->sync($request->media);
         $accountsSync = $post->accounts()->sync($request->accounts);
-        if ($post->getChanges() || ($mediaSync['attached'] || $mediaSync['detached']) || ($accountsSync['attached'] || $accountsSync['detached'])) {
+        if ($post->isDirty() || ($mediaSync['attached'] || $mediaSync['detached']) || ($accountsSync['attached'] || $accountsSync['detached'])) {
             $log = static::updateLog($request);
-            $post->update(['logs' => $log]);
+            $post->logs = $log;
+            $post->save();
         }
     }
     private static function storeLog($request)

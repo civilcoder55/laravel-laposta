@@ -1,8 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Media')
-
 @section('content')
-<div class="content-wrapper" id="app">
+<div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
@@ -12,7 +11,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </div>

@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title', 'Profile')
 @section('content')
 <div class="content-wrapper">
@@ -109,26 +108,30 @@
                             <button type="button" class="btn bg-gradient-primary btn-sm"
                                 onclick="location.href = '{{ route('disconnect.facebook') }}';"><i
                                     class="fab fa-facebook-f pr-1"></i>{{ $facebook->uid }}
-                                Connected</button>
+                                Connected
+                            </button>
                         </div>
                         @else
                         <div class="form-group m-2">
                             <button type="button" class="btn bg-gradient-primary btn-sm"
                                 onclick="location.href = '{{ route('connect.social', 'facebook') }}';"><i
-                                    class="fab fa-facebook-f pr-1"></i> login with facebook</button>
+                                    class="fab fa-facebook-f pr-1"></i> login with facebook
+                            </button>
                         </div>
                         @endif
                         @if ($google = $socialStatus['google'])
                         <div class="form-group m-2">
                             <button type="button" class="btn bg-gradient-danger btn-sm"
                                 onclick="location.href = '{{ route('disconnect.google') }}';"><i
-                                    class="fab fa-google pr-1"></i>{{ $user->uid }} Connected</button>
+                                    class="fab fa-google pr-1"></i>{{ $user->uid }} Connected
+                            </button>
                         </div>
                         @else
                         <div class="form-group m-2">
                             <button type="button" class="btn bg-gradient-danger btn-sm"
                                 onclick="location.href = '{{ route('connect.social', 'google') }}';"><i
-                                    class="fab fa-google pr-1"></i> login with google</button>
+                                    class="fab fa-google pr-1"></i> login with google
+                            </button>
                         </div>
                         @endif
                     </div>

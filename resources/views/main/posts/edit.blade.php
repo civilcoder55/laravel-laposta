@@ -1,10 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Edit Post')
-
-
 @section('content')
-<div class="content-wrapper" id="app">
+<div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
             @if (session('status'))
@@ -31,7 +28,6 @@
             @endif
             <div class="row">
                 <div class="col-sm-6 mt-5">
-
                     <div class="card">
                         <media-uploader :user-media='@json($userMedia)'
                             :already-selected-media='@json($post->media_ids)'>
@@ -45,7 +41,6 @@
                             :editable-post='@json($post)' :csrf-token='"{{ csrf_token() }}"'>
                         </post-editor>
                     </div>
-
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
@@ -64,7 +59,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </div>

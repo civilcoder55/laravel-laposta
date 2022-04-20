@@ -59,9 +59,6 @@
                                     <tr>
                                         <td>Post</td>
                                         <td>{{ $notification->data['message'] }}</td>
-
-
-
                                         @endif
                                         <td>{{ $notification->created_at}}
                                         </td>
@@ -75,13 +72,10 @@
                                                         class="nav-icon fas fa-trash-alt"></i></button>
                                             </form>
                                         </td>
-
                                     </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
-
                         </div>
                         @if ($allNotifications->hasPages())
                         <div class="card-footer clearfix">
@@ -91,9 +85,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </div>
-
 @endsection

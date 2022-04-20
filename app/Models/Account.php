@@ -17,12 +17,12 @@ class Account extends Model
         'token', 'secret',
     ];
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user()
     {
         return $this->belongsTo('App\User');
     }
 
-    public function posts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function posts()
     {
         return $this->belongsToMany(Post::class);
     }

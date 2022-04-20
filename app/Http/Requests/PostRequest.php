@@ -10,21 +10,11 @@ use Illuminate\Foundation\Http\FormRequest;
 class PostRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -42,14 +32,15 @@ class PostRequest extends FormRequest
     {
         if (!$validator->fails()) {
             $validator->after(function ($validator) {
+                // convert date to timestamp
                 if ($this->schedule_date) {
                     $this->merge(['schedule_date' => Carbon::createFromFormat('d/m/Y h:i A', $this->schedule_date)->timestamp]);
                 }
-
+                // convert non media to empty array
                 if (!$this->media) {
                     $this->merge(['media' => []]);
                 }
-
+                // convert non accounts to empty array
                 if (!$this->accounts) {
                     $this->merge(['accounts' => []]);
                 }
@@ -62,10 +53,9 @@ class PostRequest extends FormRequest
     public function messages()
     {
         return [
-            'accounts.required_if' => 'Please select some accounts before schedule',
-            'message.required_if' => 'Please add text message before schedule',
-            'schedule_date.required_if' => 'Please select schedule date and time',
-
+            'accounts.required_if' => 'Please select at least one account',
+            'message.required_if' => 'Please add text message',
+            'schedule_date.required_if' => 'Please select publish date and time',
         ];
     }
 }

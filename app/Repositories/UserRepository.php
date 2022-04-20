@@ -36,9 +36,9 @@ class UserRepository
         return auth()->user()->posts()->where(['draft' => 0, 'locked' => 0])->get();
     }
 
-    public static function getMedia()
+    public static function getMedia($fields = "*")
     {
-        return auth()->user()->media()->get(['id', 'name']);
+        return auth()->user()->media()->get($fields);
     }
 
     public static function getDraftedPosts()
@@ -71,4 +71,5 @@ class UserRepository
             "google" => $google,
         ];
     }
+
 }

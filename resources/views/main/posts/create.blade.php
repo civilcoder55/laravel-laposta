@@ -1,10 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Create Post')
-
-
 @section('content')
-<div class="content-wrapper" id="app">
+<div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
             @if (session('status'))
@@ -31,7 +28,6 @@
             @endif
             <div class="row">
                 <div class="col-sm-6 mt-5">
-
                     <div class="card">
                         <media-uploader :user-media='@json($userMedia)' :already-selected-media='@json(old("media"))'>
                         </media-uploader>
@@ -47,7 +43,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </div>

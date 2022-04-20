@@ -9,9 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="/css/fontawesome.css" />
+    <link rel="stylesheet" href="/css/fontawesome.css"/>
     <!-- Theme style -->
-    <link rel="stylesheet" href="/css/adminlte.css" />
+    <link rel="stylesheet" href="/css/adminlte.css"/>
     <!-- icheck bootstrap -->
     <link rel="stylesheet" href="/css/icheck.css">
     <!-- Ionicons -->
@@ -21,22 +21,22 @@
 </head>
 
 <body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="login-logo">
-            <a href="{{ route('dashboard') }}"><b>LA</b>POSTA</a>
-        </div>
-        <!-- /.login-logo -->
-        @yield('content')
+<div class="login-box">
+    <div class="login-logo">
+        <a href="{{ route('dashboard') }}"><b>LA</b>POSTA</a>
     </div>
-    <!-- /.login-box -->
+    <!-- /.login-logo -->
+    @yield('content')
+</div>
+<!-- /.login-box -->
 
-    <!-- REQUIRED SCRIPTS -->
-    <!-- jQuery -->
-    <script src="/js/jquery.js"></script>
-    <!-- Bootstrap -->
-    <script src="/js/bootstrap.js"></script>
-    <!-- AdminLTE App -->
-    <script src="/js/adminlte.js"></script>
+<!-- REQUIRED SCRIPTS -->
+<!-- jQuery -->
+<script src="/js/jquery.js"></script>
+<!-- Bootstrap -->
+<script src="/js/bootstrap.js"></script>
+<!-- AdminLTE App -->
+<script src="/js/adminlte.js"></script>
 
 </body>
 

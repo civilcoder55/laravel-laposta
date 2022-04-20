@@ -18,23 +18,22 @@
 @section('script')
 <script src="/js/calendar.js"></script>
 <script>
-    $(function() {
+    $(function () {
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 events: [
-                    @foreach ($posts as $post)
+                        @foreach ($posts as $post)
                     {
-                    title: '#{{$post->id}} Post',
-                    start: '{{$post->schedule_date}}',
-                    end: '',
-                    url: "{{route('posts.edit',$post->id)}}",
-                },
+                        title: '#{{$post->id}} Post',
+                        start: '{{$post->schedule_date}}',
+                        end: '',
+                        url: "{{route('posts.edit',$post->id)}}",
+                    },
                     @endforeach
                 ],
             });
             calendar.render();
         });
-
 </script>
 @endsection

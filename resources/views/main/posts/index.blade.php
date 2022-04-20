@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('title', 'Posts')
 @section('stylesheet')
 <style>
@@ -20,7 +19,6 @@
         text-overflow: ellipsis;
     }
 </style>
-
 @endsection
 @section('content')
 <div class="content-wrapper">
@@ -58,7 +56,7 @@
                                 <tbody>
                                     @foreach ($posts as $index => $post)
                                     <tr>
-                                        <td><a href="{{ route('posts.edit', $post->id) }}">{{ $post->id }}
+                                        <td><a href="{{ route('posts.show', $post->id) }}">{{ $post->id }}
                                             </a></td>
                                         <td class="message-cell">{{ $post->message }}</td>
                                         <td>{{ $post->media_count }}</td>
@@ -70,18 +68,17 @@
                                             <form action="{{ route('posts.destroy', $post->id) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
-                                                <a href="{{ $post->locked ? route('posts.review', $post->id) : route('posts.edit', $post->id) }}"
-                                                    class="btn action-btn"><i class="far fa-edit"></i>
+                                                @if (!$post->locked)
+                                                <a href="{{ route('posts.edit', $post->id) }}" class="btn action-btn"><i
+                                                        class="far fa-edit"></i>
                                                 </a>
+                                                @endif
                                                 <button class="btn action-btn" type="submit"><i
                                                         class="nav-icon fas fa-trash-alt"></i></button>
-
                                             </form>
                                         </td>
-
                                     </tr>
                                     @endforeach
-
                                 </tbody>
                             </table>
                         </div>
@@ -90,16 +87,10 @@
                             {{ $posts->links('layouts.pagination') }}
                         </div>
                         @endif
-
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </div>
-
-@endsection
-
-@section('script')
-
 @endsection

@@ -11,7 +11,7 @@ class NotificationController extends Controller
 
     public function index()
     {
-        $allNotifications = UserRepository::getNotifications();
+        $allNotifications = UserRepository::getNotifications(); //"notifications" variable name already used in view composer
         return view('main.notifications', compact('allNotifications'));
     }
 

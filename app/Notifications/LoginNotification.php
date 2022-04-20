@@ -21,13 +21,13 @@ class LoginNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database', 'broadcast'];
+        return ['broadcast', 'database'];
     }
 
     public function toDatabase($notifiable): array
     {
         Cache::forget('notifications.' . $notifiable->id);
-        return ['type' => 'login', 'message' => $this->message, 'link' => $this->link];
+        return ['status' => 'warning', 'type' => 'login', 'message' => $this->message, 'link' => $this->link];
     }
 
     public function toBroadcast($notifiable)
@@ -35,13 +35,13 @@ class LoginNotification extends Notification
         return (new BroadcastMessage([
             'id' => $this->id,
             'data' => [
-                'status' => 'warning', // for front-end
+                'status' => 'warning',
+                'type' => 'login',
                 'message' => $this->message,
                 'link' => $this->link,
-                'type' => 'login',
             ],
             'created_at' => 'just now',
-        ]))->onConnection('sync');
+        ]));
     }
 
     public function toArray($notifiable)

@@ -30,7 +30,9 @@
         "moment": "^2.29.1",
         "pusher-js": "4.3.0",
         "save": "^2.4.0",
+        "vue-observe-visibility": "^1.0.0",
         "vue-select-image": "^1.9.0",
+        "vue-toast-notification": "^0.6.2",
         "vue2-datepicker": "^3.9.0"
     }
 }

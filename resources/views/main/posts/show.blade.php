@@ -1,9 +1,7 @@
 @extends('layouts.app')
-
 @section('title', 'Post Preview')
-
 @section('content')
-<div class="content-wrapper" id="app">
+<div class="content-wrapper">
     <section class="content">
         <div class="container-fluid">
             @if (session('status'))
@@ -69,8 +67,6 @@
                                             </div>
                                         </div>
                                         @endforelse
-
-
                                     </div>
                                     <a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -90,7 +86,8 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-default btn-sm "><i class="fas fa-trash-alt"></i>
-                                    Delete Post</button>
+                                    Delete Post
+                                </button>
 
                             </form>
                         </div>
@@ -105,33 +102,17 @@
                             </h3>
                         </div>
                         <div class="card-body overflow-auto">
-                            <div v-for="log in post.logs" class="callout" :class="'callout-' + log.status">
-                                <h5>@{{ log.status }}</h5>
-                                <p>@{{ log.message }}</p>
+                            @foreach ($post->logs as $log)
+                            <div class="callout callout-{{ $log['status'] }}">
+                                <h5>{{ $log['status'] }}</h5>
+                                <p>{{ $log['message'] }}</p>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex align-items-baseline">
-
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 </div>
-@endsection
-
-@section('script')
-<script>
-    const app2 = new Vue({
-    el: '#app',
-    data: {
-        mediaUrl: "{{ url('/media/thumb') }}/",
-        post: {
-            logs:@json($post->logs),
-        }
-    },
-})
-</script>
 @endsection

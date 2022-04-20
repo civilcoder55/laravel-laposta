@@ -22,8 +22,8 @@ class PostController extends Controller
 
     public function create()
     {
-        $userMedia = UserRepository::getMedia();
-        $userAccounts = UserRepository::getAccounts(['name', 'type', 'id']);
+        $userMedia = UserRepository::getMedia(['id', 'name']);
+        $userAccounts = UserRepository::getAccounts(['id', 'type', 'name']);
         return view('main.posts.create', compact(['userMedia', 'userAccounts']));
     }
 
@@ -53,13 +53,6 @@ class PostController extends Controller
         $this->authorize('edit', $post);
         PostService::update($request, $post);
         return redirect()->route('posts.edit', $post->id)->with('status', 'your post updated successfully');
-    }
-
-    public function review(Post $post)
-    {
-        $this->authorize('review', $post);
-        $post->load(['media:id,name']);
-        return view('main.posts.review', compact(['post']));
     }
 
     public function destroy(Post $post)

@@ -7,7 +7,6 @@ use App\Models\Media;
 use App\Repositories\UserRepository;
 use App\Services\MediaService;
 use Illuminate\Support\Facades\Storage;
-use phpDocumentor\Reflection\Types\Mixed_;
 
 class MediaController extends Controller
 {
