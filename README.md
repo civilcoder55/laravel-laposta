@@ -58,7 +58,6 @@ and update tokens in .env file
 
 ## Screenshots
 
-<p align="center"><img src="screenshots/0.png"></p>
 <p align="center"><img src="screenshots/1.png"></p>
 <p align="center"><img src="screenshots/2.png"></p>
 <p align="center"><img src="screenshots/3.png"></p>
